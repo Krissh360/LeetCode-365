@@ -1,0 +1,39 @@
+Problem: Roman to integer
+
+Approach: The approach was quite simple. I used the ASCII values of alphabets. Kept the ASCII values of all the letters as 0 at first and only updated that of the 7 letters we require as Roman letters.
+This way I could just add my personally assigned values of the roman letter I have. For instance, if an input string III is given, I could simply traverse through it and on each element I could add the values corresponding to it in a variable. I had the value 1, so throughout the traversal, it would be 1+1+1 resulting in 3. But another thing needed to be checked, which was that if the value of the roman letter to the left of the currently traversing letter was smaller, the value needed to be subtracted instead. This is all the Roman letters like 9(IX), 40(XL), 90(XC) are basically a subtraction of the left letter from the right one.
+
+Time complexity: O(n)
+
+```cpp
+
+class Solution {
+public:
+    int romanToInt(string s) {
+
+        int values[256] = {0};
+        values['I'] = 1;
+        values['V'] = 5;
+        values['X'] = 10;
+        values['L'] = 50;
+        values['C'] = 100;
+        values['D'] = 500;
+        values['M'] = 1000;
+
+        int answer = 0;
+
+        for (int i = 0; i <= s.size() - 1; i++)
+        {
+            if (i + 1 < s.size() && values[s[i]] < values[s[i+1]])
+            {
+                answer -= values[s[i]];
+            }
+            else
+            {
+                answer += values[s[i]];
+            }
+        }
+
+        return answer;
+    }
+};

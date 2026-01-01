@@ -1,0 +1,35 @@
+Problem: Integer to roman
+
+Approach: i knew that in order to convert any given number into Roman letters, I had to take out the largest possible part from that number, that could correspond to a roman letter which is 1000(D). So I simply initialized an array and a string with elements in an order so they would correspond to the same index while traversing. So for every index, I could just compare the number with the largest possible roman letter (D/1000). And take that part out of the number and add the corresponding Roman letter to the final answer string, until it falls below 1000, then I could move on to the next smaller Roman letter and repeat the same.
+
+NOTE: While I was trying to solve this, only the 7 known Roman letters didn't work as if the given number had something like 9 or 40, it would be compared to the corresponding numbers - 5 and 10 respectively, which failed to give the right solution. So I had to add a total of 13 elements in both the values array and the Roman letters string, which included - 1, 4, 5, 9 , 10, 40, 50, 90, 100, 400, 500, 900, 1000 and all their corresponding roman letters in the string.
+
+Time complexity: O(n)
+Space complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    string intToRoman(int num) {
+        int values[13] = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+        string romans[13] = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+
+        string answer = "";
+
+        while (num > 0)
+        {
+            for (int i = 0; i < 13; i++)
+            {
+                if (num >= values[i])
+                {
+                    num -= values[i];
+                    answer += romans[i];
+                    break;
+                }
+            }
+        }
+
+        return answer;
+    }
+};
