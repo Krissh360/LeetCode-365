@@ -1,0 +1,34 @@
+Problem: Sort colors -> Sort the elements of a given array colored red, blue and white, which are basically represented by 0, 1 and 2 respectively.
+
+NOTE: Must solve the problem without using the library's sorting functions.
+
+Approach: My initial thought was to use a sorting algorithm to sort the array, but no sorting algorithm that I have studied till now would give me a better time complexity than O(nlogn). So I thought if I could possibly get a better solution for this. 
+Since, the colors or the numbers in the array were given in the question, I thought I could count the frequencies of each of the numbers and then overwrite the given array using those frequencies.
+Taking a variable "zero" as the number of zeroes in the original array. Same for 1's and 2's.
+Then overwrite the first 'zero' elements with the number 0. Overwrite the next 'one' elements with the number 1 and the next 'two' elements with the number 2. This approach finally gave me a better result than simply using a sorting algorithm.
+
+Time complexity: O(n)
+Space complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+
+        int zero = 0, one = 0, two = 0;
+        int n = nums.size();
+
+        for (int i = 0; i < n; i++)
+        {
+            if (nums[i] == 0) zero++;
+            if (nums[i] == 1) one++;
+            if (nums[i] == 2) two++;
+        }
+
+        for (int i = 0; i < zero; i++) nums[i] = 0;
+        for (int i = zero; i < (zero + one); i++) nums[i] = 1;
+        for (int i = (zero + one); i < (zero + one + two); i++) nums[i] = 2;
+        
+    }
+};
