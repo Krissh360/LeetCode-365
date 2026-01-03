@@ -1,0 +1,43 @@
+Problem: Longest substring without repeating characters
+
+Approach: First intuition was to use a double loop where 'i' kept on moving from 0 to n and 'j' moved from 0 to 'i-1' every time, comparing all the characters in the substring from 0 to 'i-1' with the character at s[i]. But this approach was static and it could only increment the variable 'length' but not dynamically adjust it once a longer substring is found.
+So I learnt a bit about the sliding window approach
+
+1. Two pointers, both initially pointing at the first character are used. 'r' iterates while 'l' stays at the first character. 
+2. Along with this, a vector of size 128 with all the elements marked as -1 (unvisited). 
+3. Then while 'j' iterates, we keep checking if the character is already visited or not with the help of this 'vis' vector.
+4. In case a character is already visited, simply move the 'l' pointer to the very next character of the already visited character, this way it doesn't come as visited in the further substrings.
+5. The length of every substring is calculated by incrementing 'length' every time a non visited character is encountered. This length is then compared to 'max_len' after every iteration and the value of the larger one is assigned to 'max_len'.
+
+Time complexity: O(n)
+Space complexity: O(128)
+
+```cpp
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+
+        int n = s.size();
+        int length = 0, max_len = 0;
+        int r = 0, l = 0;
+
+        if (n == 0) return 0;
+
+        vector<int> vis(128, -1);
+
+        while (r < n)
+        {
+            if (vis[s[r]] != -1)
+            {
+                if (vis[s[r]] >= l) l = vis[s[r]] + 1;
+            }
+            length = r-l+1;
+            max_len = max(length, max_len);
+
+            vis[s[r]] = r;
+            r++;
+        }
+        return max_len;
+    }
+};
