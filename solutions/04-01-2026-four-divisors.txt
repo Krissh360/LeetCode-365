@@ -1,0 +1,44 @@
+Problem: Four divisors
+
+Approach: For each number in the array, I counted its divisors by checking values from 1 up to its square root.  
+If a number `d` divides 'n', then 'n/d' is also a divisor, so I included both while ensuring I don’t double-count perfect squares.  
+While collecting divisors, I also kept a running sum of them.  
+After counting, if the number had exactly 4 divisors, I added its divisor sum to the final result.
+This solution works correctly, but it runs in 'O(n√m)' in the worst case (where 'm' is the largest number in the input), so it can be optimized further.
+
+Time complexity: O(n√m)
+Space complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    int sumFourDivisors(vector<int>& nums) {
+        
+        int sum = 0;
+
+        for (int i = 0; i < nums.size(); i++)
+        {
+            int temp_sum = 0;
+            int count = 0;
+
+            for (int j = 1; j <= sqrt(nums[i]); j++)
+            {   
+                if (nums[i] % j == 0)
+                {
+                    temp_sum += j;
+                    count++;
+
+                    if (j != nums[i]/j)
+                    {
+                        temp_sum += nums[i]/j;
+                        count++;
+                    }
+                }
+            }
+
+            if (count == 4) sum += temp_sum;
+        }
+        return sum;
+    }
+};

@@ -1,0 +1,40 @@
+Problem: Minimum consecutive cards to pick up
+
+Approach: Used an unordered map and sliding window approach. The map keeps check of the visited elements, while also storing the last index of every element of the array.
+While traversing the array, check if the current element is visited. If so, calculate the length of the subarray that starts as well as ends with the same element (which is essentially the difference of the index of current element and the last index of the same element + 1). Compare this length with the global minimum length every time a repeated element is encountered.
+If the element is not visited, store its index in the map and move to the next index.
+
+Time complexity: O(n)
+Space complexity: O(n)
+
+```cpp
+
+class Solution {
+public:
+    int minimumCardPickup(vector<int>& cards) {
+        
+        int n = cards.size();
+        int r = 0;
+        int min_len = 1e6;
+
+        unordered_map<int, int> lastIdx;
+
+        if (n <= 1) return -1;
+
+        while (r < n)
+        {
+            int x = cards[r];
+
+            if (lastIdx.count(x))
+            {
+                int l = lastIdx[x];
+                int len = r-l+1;
+                min_len = min(min_len, len);
+            }
+            lastIdx[x] = r;
+            r++;
+        }
+
+        return (min_len == 1e6) ? -1:min_len;
+    }
+};
