@@ -1,0 +1,25 @@
+Problem: maximum subarray
+
+Approach: Have a variable initialized to minimum possible value globally, and another to calculate temporary sum for each iteration. Simply keep on adding all the elements of the array. And in each iteration, compare the temporary sum with 0, because if it is less than 0, it is not the desired sum that we would want to add in the global max sum. It will only result in decreasing the sum of the subarray. Also compare the temporary sum with the max sum to ensure that every time the temporary sum is more than the max sum, we set the temporary sum as the max sum.
+
+Time complexity: O(n)
+Space complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        
+        int sum = 0, max_sum = INT_MIN;
+
+        for (int i = 0; i < nums.size(); i++)
+        {
+            sum += nums[i];
+
+            max_sum = max(max_sum, sum);
+            sum = max(0, sum);
+        }
+        return max_sum;
+    }
+};
