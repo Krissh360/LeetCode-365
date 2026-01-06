@@ -1,0 +1,24 @@
+Problem: Largest odd number in a string
+
+Approach: Start a reverse loop on the string and iterate until we get an odd digit in the string. Encountering the first odd number from the last will give us the largest odd number. When the first odd number is encountered, return the string from the start to that particular odd digit. If no odd number is found throughout the iteration, simply return an empty string.
+
+Time complexity: O(n)
+Space complexity: O(1);
+
+```cpp
+
+class Solution {
+public:
+    string largestOddNumber(string num) {
+
+        for (int i = num.size() - 1; i >= 0; i--)
+        {
+            if ((num[i] - '0') % 2 != 0)
+            {
+                return num.substr(0, i+1);
+            }
+        }
+
+        return "";
+    }
+};
