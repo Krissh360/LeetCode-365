@@ -1,0 +1,50 @@
+Problem: Reverse words in a string
+
+Approach: First, we initialize two pointers - i and j to 0. Then for every j < n, we check if i = ' ', if so we simply move i and j to the next index. If i !=j, we keep pushing every character in a string till j != ' '. This way we have one word in this temporary string now, after which we push this string into a vector. This stores single words inside a temporary string first, and then pushes them in a vector one by one. At last, we run a loop from the last to first on the vector and store the words in a resultant string in a reverse order, giving us the final reversed string.
+
+Time complexity: O(n)
+Space complexity: O(w), where 'w' is the number of words.
+
+```cpp
+
+class Solution {
+public:
+    string reverseWords(string s) {
+        int i = 0, j = 0;
+        int n = s.size();
+        vector<string> rev;
+        string word = "";
+        string ans = "";
+
+        while (j < n)
+        {
+            if (s[i] != ' ')
+            {
+                j = i;
+
+                while (s[j] != ' ' && j < n)
+                {
+                    word += s[j];
+                    j++;
+                }
+
+                rev.push_back(word);
+                word.clear();
+                i = j;
+            }
+            else
+            {
+                i++;
+                j++;
+            }
+        }
+
+        for (int k = rev.size() - 1; k >= 0; k--)
+        {
+            ans += rev[k];
+            if (k != 0) ans += ' ';
+        }
+
+        return ans;
+    }
+};
