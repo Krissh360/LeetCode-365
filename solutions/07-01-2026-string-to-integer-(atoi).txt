@@ -1,0 +1,60 @@
+Problem: string to integer (atoi)
+
+Approach: Approach:
+First, skip all the spaces at the start. If nothing’s left after that, return 0.
+
+Then, check if the number should be positive or negative by looking for `+` or `-`.
+
+After that, read the digits one by one and build the number. A `long` variable is used so we can catch overflow before it breaks.
+
+While adding digits, if the number goes outside the 32-bit integer range, clamp it to `INT_MAX` or `INT_MIN`.
+
+Finally, apply the sign and return the result.
+
+
+Time complexity: O(n)
+Space complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    int myAtoi(string s) {
+        
+        int n = s.size();
+        if (n == 0) return 0;
+
+        int i = 0;
+        while (i < n && s[i] == ' ')
+        {
+            i++;
+        }
+
+        if (i == n) return 0;
+        s = s.substr(i, n);
+        i = 0;
+        n = s.size();
+
+        int sign = 1;
+
+        if (s[0] == '-') sign = -1;
+
+        if (s[i] == '-' || s[i] == '+') {
+            if (s[i] == '-') sign = -1;
+            i++;
+        }
+
+        long ans = 0;
+
+         while (i < n && isdigit(s[i]))
+         {
+            ans = ans * 10 + (s[i] - '0');
+
+            if (sign == -1 && -ans < INT_MIN) return INT_MIN;
+            if (sign == 1 && ans > INT_MAX) return INT_MAX;
+            i++;
+        }
+
+        return (int)(sign*ans);
+    }
+};
