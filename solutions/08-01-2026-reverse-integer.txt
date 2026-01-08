@@ -1,0 +1,33 @@
+Problem: Reverse integer
+
+Approach: It was pretty much a simple reverse of an integer, as the name of the problem suggests. So all we need to do to solve this is take a variable to store the reverse integer. Now till x!= 0, take mod of the original number to get the last digit of the number and then assign the sum of this digit and rev*10 back to 'rev'. This makes the last digit to be the first one, second last to be the second and so on.
+The only thing that needs to be taken care of is that the answer, 'rev' in this case can not go outside the 32 bit integer range. For that, we need to check for the condition where if rev > INT_MAX/10 or it is (== INT_MAX && digit > 7). Another condition that needs to be checked is that rev must also not be < INT_MIN or (== INT_MIN/10 && digit < -8), return 0 in both the cases.
+
+Why divide INT_MIN and INT_MAX by 10 while checking for the bounds?
+-- because we multiply rev with 10 in every iteration just before checking for the bounds, which makes it to jump out of the bounds. (INT_MIN < rev < INT_MAX => INT_MIN*10 < rev*10 < INT_MAX*10)
+
+Time complexity: O(n)
+Space complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    int reverse(int x){
+
+        int rev = 0;
+
+        while (x != 0)
+        {
+            int digit = x % 10;
+            x /= 10;
+
+            if (rev > INT_MAX/10 || (rev == INT_MAX/10 && digit > 7)) return 0;
+            if (rev < INT_MIN/10 || (rev == INT_MIN/10 && digit < -8)) return 0;
+
+            rev = rev * 10 + digit;
+        }
+
+        return rev;
+    }
+};
