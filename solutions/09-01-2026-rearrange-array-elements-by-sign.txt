@@ -1,0 +1,35 @@
+Problem: Rearrange Array Elements by Sign
+
+Approach: Created a new array `B` of the same size.
+Used two pointers — one for positive index starting at 0, and one for negative index starting at 1.
+Scanned the input array, and placed positives at even positions and negatives at odd positions.
+Moved the respective pointer by 2 each time to maintain the alternating pattern.
+
+Time Complexity: O(n)
+Space Complexity: O(n)
+
+```cpp
+
+class Solution {
+public:
+    vector<int> rearrangeArray(vector<int>& nums) {
+        
+        vector<int> B(nums.size(), 0);
+        int pIdx = 0, nIdx = 1;
+
+        for (int i = 0; i < nums.size(); i++)
+        {
+            if (nums[i] > 0)
+            {
+                B[pIdx] = nums[i];
+                pIdx +=2;
+            }
+            else
+            {
+                B[nIdx] = nums[i];
+                nIdx +=2;
+            }
+        }
+        return B;
+    }
+};
