@@ -1,0 +1,32 @@
+Problem: Longest Common Prefix
+
+Approach:
+Used vertical scanning to compare characters column by column.
+Treated the first string as a reference.
+For each character index, compared the character with the same index in all other strings.
+Stopped immediately when a mismatch was found or when any string ended.
+The substring up to that index is the longest common prefix.
+
+Time Complexity: O(n × m)
+Space Complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    string longestCommonPrefix(vector<string>& strs) {
+        
+        if (strs.empty()) return "";
+
+        for (int i = 0; i < strs[0].size(); i++)
+        {
+            char c = strs[0][i];
+
+            for (int j = 1; j < strs.size(); j++)
+            {
+                if (strs[j][i] != c || i > strs[j].size()) return strs[0].substr(0, i);
+            }
+        }
+        return strs[0];
+    }
+};
