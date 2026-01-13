@@ -1,0 +1,70 @@
+Problem: Sort Vowels in a String
+
+Approach: I scanned the string and separated vowels from consonants.
+Whenever I found a vowel, I counted it using frequency arrays and replaced its position in the string with a placeholder (`#`).
+I used two frequency arrays — one for lowercase vowels and one for uppercase vowels — to preserve case and sort correctly based on ASCII order.
+After counting, I rebuilt a sorted vowel string by first adding uppercase vowels and then lowercase vowels.
+Finally, I traversed the original string again and replaced each placeholder with the next vowel from the sorted list.
+
+Time Complexity: O(n)
+Space Complexity: O(n)
+
+```cpp
+
+class Solution {
+public:
+    string sortVowels(string s) {
+
+        vector<int> lower(26,0);
+        vector<int> upper(26,0);
+        
+        for (int i = 0; i < s.size(); i++)
+        {
+            if (s[i] == 'a' || s[i] == 'e' || s[i] == 'i' || s[i] == 'o' || s[i] == 'u')
+            {
+                lower[s[i] - 'a']++;
+                s[i] = '#';
+            }
+            else if (s[i] == 'A' || s[i] == 'E' || s[i] == 'I' || s[i] == 'O' || s[i] == 'U')
+            {
+                upper[s[i] - 'A']++;
+                s[i] = '#';
+            }
+        }
+
+        string vowel;
+
+        for (int i = 0; i < 26; i++) // for upper first because the ASCII value is lower than that of lower case
+        {
+            char c = 'A' + i;
+            while (upper[i])
+            {
+                vowel += c;
+                upper[i]--;
+            }
+        }
+
+        for (int i = 0; i < 26; i++) // now for lower case letters
+        {
+            char c = 'a' + i;
+            while (lower[i])
+            {
+                vowel += c;
+                lower[i]--;
+            }
+        }
+
+        int first = 0, second = 0;
+
+        while (second < vowel.size())
+        {
+            if (s[first] == '#')
+            {
+                s[first] = vowel[second];
+                second++;
+            }
+            first++;
+        }
+        return s;
+    }
+};
