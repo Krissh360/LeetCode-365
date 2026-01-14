@@ -1,0 +1,31 @@
+Problem: Remove duplicates from sorted array
+
+Approach: We are basically required to shift all the unique elements to the start of the array and the rest of the repeating elements don't matter to us. So this means that we can use two pointers. One of which iterates normally through the array while the other takes care of the repeating numbers. Say, i iterates normally and j is used with a simple condition that focuses on checking the numbers that are not same as the i'th element. If they are same, j will simply iterate over it. And if they are different, i is moved one index further and the j'th element is moved there. This way we have all the unique k elements in the starting of the array. The rest don't matter to us. Alongside this, we also keep a counter that is initially set to 1 because the first element will always be unique. And this counter is incremented every time a new element is moved to the front.
+
+Time complexity: O(n)
+Space complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        
+        int i = 0, j = 0, k = 1;
+
+        if (nums.size() == 1) return 1;
+
+        while (j < nums.size())
+        {
+            if (nums[j] != nums[i])
+            {
+                i++;
+                nums[i] = nums[j];
+                k++;
+            }
+            j++;
+        }
+
+        return k;
+    }
+};
