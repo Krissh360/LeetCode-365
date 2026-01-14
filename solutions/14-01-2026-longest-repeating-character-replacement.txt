@@ -1,0 +1,39 @@
+Problem: Longest Repeating Character Replacement
+
+Approach: I used a sliding window approach with two pointers.
+As the window expands, I maintain a frequency array to count characters and track the maximum frequency of any character inside the current window.
+The idea is that the number of characters that need to be replaced is `(window size - max frequency)`.
+If this value becomes greater than `k`, the window is no longer valid, so I shrink it from the left.
+At each step, I update the maximum valid window size found.
+This works because we only care about the most frequent character in the window, and the window remains optimal even if `maxfreq` is not recalculated during shrink operations.
+
+Time Complexity: O(n)
+
+Space Complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    int characterReplacement(string s, int k) {
+
+        int i = 0, j = 0, maxfreq = 0, answer = 0;
+        vector <int> freq(26, 0);
+
+        while (j < s.size())
+        {
+            freq[s[j] - 'A']++;
+            maxfreq = max(maxfreq, freq[s[j] - 'A']);
+
+            while((j-i+1) - maxfreq > k)
+            {
+                freq[s[i] - 'A']--;
+                i++;
+            }
+            answer = max(answer, j-i+1);
+            j++;
+        }
+
+        return answer;
+    }
+};
