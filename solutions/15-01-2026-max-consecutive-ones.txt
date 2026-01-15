@@ -1,0 +1,29 @@
+Problem: Max consecutive ones
+
+Approach:
+While iterating through the array, if the element encountered is '1', we increment the variable 'freq', initially taken as 0. If the encountered element is not a '1', it means it will be a 0 as the given array is binary. At this point the continuity of 1's is broken, if there was any. So we set 'freq' as 0 again. Along side, we have a 'maxfreq' that keeps track of the maximum consecutive frequency of 1. So in every iteration we also check for the max of (maxfreq and freq) because 'freq' keeps fluctuating every time but we need a variable to keep track of the maximum frequency that we can also return as the final output for the problem.
+
+Time complexity: O(n)
+Space complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    int findMaxConsecutiveOnes(vector<int>& nums) {
+
+        if (nums.size() < 1) return 0;
+
+        int freq = 0, maxfreq;
+
+        for (int i = 0; i < nums.size(); i++)
+        {
+            if (nums[i] == 0) {freq = 0;}
+
+            else{freq++;}
+
+            maxfreq = max(maxfreq, freq);
+        }
+        return maxfreq;
+    }
+};
