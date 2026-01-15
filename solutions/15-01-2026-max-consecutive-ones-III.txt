@@ -1,0 +1,37 @@
+Problem: Max consecutive ones 3
+
+Approach:
+Since the given array only had binary elements in it, we can easily store the frequencies of the elements in a vector of size 2. Two pointers - i and j will be used for iterating through the array, where j iterates through the current element and i stays at the start of the window, used to shrink the size of the window according to the required condition.
+
+The condition that we need to check while iterating is quite simple, we just need to check if the difference between the size of the window and the frequency of '1' is less than or equal to 'k'. If it is so, it means that the subarray in the window is valid according to the problem. So, we will use a condition where we will check for the string's validity, If the string is not valid, we will simply shrink the size of the window by incrementing 'i'.
+
+Condition: The condition is also very straight forward. If the total number of 1's inside the window is k or less than k more than that of the 0's in the window, it means that the 0's inside the window can be flipped. So we check for the difference of the window size and the freq of 1's in it. This gives us the number of 0's in the window and we compare it with k. If it is less than or equal to k, the subarray is valid. If not, we shrink the window.
+
+Time complexity: O(n)
+Space complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    int longestOnes(vector<int>& nums, int k) {
+        
+        int i = 0, j = 0, mxlen = 0;
+        int n = nums.size();
+        vector <int> freq(2, 0);
+
+        while (j < n)
+        {
+            freq[nums[j]]++;
+
+            if ((j-i+1) - freq[1] > k)
+            {
+                freq[nums[i]]--;
+                i++;
+            }
+            mxlen = max (mxlen, (j-i+1));
+            j++;
+        }
+        return mxlen;
+    }
+};
