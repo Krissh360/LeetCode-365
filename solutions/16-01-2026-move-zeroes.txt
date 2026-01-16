@@ -1,0 +1,33 @@
+Problem: Move zeroes
+
+Approach:
+The intuition was to move all the non zero elements at the beginning in the same order, instead of moving the zeroes to the end. And then make all the rest of the elements zero. This way we have all the non zero elements in the beginning in the same order as in the original array, and all the elements in the end will be zeroes. So, technically all the zeroes will be "moved" to the end.
+
+We use two pointers for this, both at index 0 initially. Then we keep incrementing j till a non zero element is encountered. When a non zero element is encountered, we move that element to the ith index and then we increment i. j keeps incrementing regardless. Then we run another loop from the index where i already is, which is the index right after the index where all the non zero elements end, to the end of the array and make all the remaining elements as 0.
+
+Time complexity: O(n)
+Space complexity: O(1);
+
+```cppclass Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        
+        int i = 0, j = 0, n = nums.size();
+
+        while (j < n)
+        {
+            if (nums[j] != 0) 
+            {
+                nums[i] = nums[j];
+                i++;
+            }
+            j++;
+        }
+
+        while (i < n)
+        {
+            nums[i] = 0;
+            i++;
+        }
+    }
+};
