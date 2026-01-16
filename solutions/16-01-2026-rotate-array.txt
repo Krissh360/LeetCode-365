@@ -1,0 +1,43 @@
+Problem: Rotate array
+
+Approach:
+Used a stack to store the last k number of elements, so that they will automatically be in the reverse order when accessed one by one. Then moved all the elements from the n-1-k index, which is basically the index right before the elements that we need to rotate, to the end of the array in the same order.
+Moving the elements to the end of the array was done by using two pointers, one of which pointed to the last non rotatable element and the other pointed to the end of the array.
+Then simply replaced the first k places in the array with the stack elements one by one. 
+
+This rotated the array by k elements, or in other words k times if one element was rotated at a time.
+
+Time complexity: O(n)
+Space complexity: O(k)
+
+```cpp
+
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
+        
+        stack <int> stk;
+        int n = nums.size();
+        k = k % n;
+        
+        for (int i = n-1; i > n-1-k; i--)
+        {
+            stk.push(nums[i]);
+        }
+
+        int j = n-1, i = n-1-k;
+
+        while (i >= 0)
+        {
+            nums[j] = nums[i];
+            i--;
+            j--;
+        }
+
+        for (int i = 0; i < k; i++)
+        {
+            nums[i] = stk.top();
+            stk.pop();
+        }
+    }
+};
