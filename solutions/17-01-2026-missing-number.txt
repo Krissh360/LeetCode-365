@@ -1,0 +1,25 @@
+Problem: Missing number
+
+Approach:
+
+Use the fact that numbers are from 0 to n with one missing.
+Calculate the expected sum n*(n+1)/2 and subtract the actual array sum—the difference is the missing number.
+Alternatively, XOR all indices and values; matching pairs cancel out, leaving the missing value.
+
+Time complexity: O(n)
+Space complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+        
+        int n = nums.size(), actual = 0;
+        int expected = n * (n + 1) / 2;
+
+        for (int i = 0; i < n; i++) actual += nums[i];
+
+        return expected - actual;
+    }
+};
