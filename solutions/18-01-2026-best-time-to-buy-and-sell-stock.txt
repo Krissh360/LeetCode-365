@@ -1,0 +1,34 @@
+Problem: Best time to buy and sell stock
+
+Approach:
+
+Since the indices of the array are basically days, it means that we can not go backwards in any case and also that in order to earn any profit at all, the price of the stock in the future days must be higher than today. So in case the price tomorrow is higher than or equal to that today, we simply compute the difference of the two to find the profit of that particular pair of days. Then we compare it with "maxprofit" and move "sell" to the next index to compare today's prices to that day's. And we keep comparing the profit that particular pair of days to the "maxprofit". 
+If it is not the case and the prices of some future day end up being more than today's, it simply means that it will be better to buy the stocks on that day so we move the "buy" pointer to the index of "sell" pointer.
+
+Time complexity: O(n)
+Space complexity: O(1)
+
+```cppclass Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+
+        if (prices.size() <= 1) return 0;
+
+        int buy = 0, sell = 0, n = prices.size();
+        int profit = 0, mxprofit = INT_MIN;
+
+        while (sell < n)
+        {
+            if (prices[sell] >= prices[buy])
+            {
+                profit = prices[sell] - prices[buy];
+                mxprofit = max(profit, mxprofit);
+            }
+            else {buy = sell;}
+
+            sell++;
+        }
+        
+        return mxprofit;
+    }
+};
