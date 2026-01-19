@@ -1,0 +1,31 @@
+Problem: Reverse Linked List (Recursive)
+
+## Approach
+Used a recursive strategy to reverse the linked list.
+The idea is to keep moving to the end of the list until reaching the last node.
+That last node becomes the new head of the reversed list.
+
+While returning from recursion, each node makes its next node point back to itself.
+Then the original next pointer is set to NULL to avoid cycles.
+This slowly flips all the links in reverse order.
+
+Time Complexity: O(n)
+Space Complexity: O(n)
+
+```cpp
+
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+
+        if (!head || !head -> next) return head;
+
+        ListNode *temp = reverseList(head -> next);
+
+        head -> next -> next = head;
+        head -> next = NULL;
+
+        return temp;
+        
+    }
+};

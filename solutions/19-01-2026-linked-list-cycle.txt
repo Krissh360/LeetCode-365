@@ -1,0 +1,31 @@
+Problem: Linked List Cycle Detection
+
+## Approach
+Used the classic two-pointer technique (Floyd’s Cycle Detection).
+One pointer moves one step at a time (slow) and the other moves two steps (fast).
+If there is a cycle, the fast pointer will eventually meet the slow pointer inside the loop.
+If the fast pointer reaches NULL, it means the list has no cycle.
+
+This works because in a cyclic list the distance between slow and fast keeps shrinking until they collide.
+
+Time Complexity: O(n) 
+Space Complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+
+        ListNode *slow = head;
+        ListNode *fast = head;
+
+        while (fast != NULL && fast -> next != NULL)
+        {
+            slow = slow -> next;
+            fast = fast -> next -> next;
+            if (slow == fast) return true;
+        }
+        return false;
+    }
+};
