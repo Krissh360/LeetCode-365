@@ -8,7 +8,9 @@ If it is not the case and the prices of some future day end up being more than t
 Time complexity: O(n)
 Space complexity: O(1)
 
-```cppclass Solution {
+```cpp
+
+class Solution {
 public:
     int maxProfit(vector<int>& prices) {
 
