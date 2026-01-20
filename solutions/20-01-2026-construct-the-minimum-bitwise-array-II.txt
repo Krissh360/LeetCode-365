@@ -1,0 +1,38 @@
+Problem: Construct the minimum bitwise array II
+
+Approach:
+Since all the given numbers in the array are prime, all of them will be odd except 2, which ends in a 0 in the binary. So we will simply check if nums[i] is a multiple of 2 and place -1 in the ans array because no such x exists for any even number that can satisfy the problem's conditions.
+As for the rest of the elements of nums, it can be observed that when any x is added to x+1, the first 0 from the right flips to 1 and all the 1's to the right of this 0 flip to 0. And then, when OR of x is taken with x+1, the first 0 from the right in x is flipped to 1 and rest of the entire number stays the same as x. So in short, when x is OR with x+1, only the first 0 from the right is flipped to 1.
+
+Thus, for every nums[i] which is not an even prime, we check for it's bitwise & with left shift of our iterator variable, say j. This condition basically checks for set bit, and fails when the first unset bit is encountered, which is exactly what we need. Then we simply flip that bit to 1, which is the first 0 from the right to 1 using the xor of nums[i] with the left shift of the bit just previous to it.
+
+Time complexity: O(n)
+Space complexity: O(n)
+
+```cpp
+
+class Solution {
+public:
+    vector<int> minBitwiseArray(vector<int>& nums) {
+
+        vector <int> ans;
+
+        for (int i = 0; i < nums.size(); i++)
+        {
+            if (nums[i] % 2 == 0)
+            {
+                ans.push_back(-1);
+            }
+
+            else
+            {
+                int j = 0;
+                while (nums[i] & (1 << j)) j++;
+
+                int x = nums[i] ^ (1 << (j-1));
+                ans.push_back(x);
+            }
+        }
+        return ans;
+    }
+};
