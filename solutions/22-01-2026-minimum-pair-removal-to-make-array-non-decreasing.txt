@@ -1,0 +1,58 @@
+Problem: Minimum Pair Removal to Make Array Non-Decreasing
+
+Approach:
+The idea is to repeatedly modify the array until it becomes non-decreasing.
+
+First, I check whether the current array is already sorted in non-decreasing order.  
+If not, I scan all adjacent pairs and find the pair with the minimum sum.  
+I then merge that pair by replacing the first element with their sum and removing the second element from the array.  
+This process is repeated, and I count how many such merge operations are needed until the array becomes sorted.
+
+Time Complexity: O(n²)
+Space Complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    int minimumPairRemoval(vector<int>& nums)
+    {
+        int operations = 0;
+
+        while (true)
+        {
+            bool sorted = true;
+
+            for (int i = 1; i < nums.size(); i++)
+            {
+                if (nums[i] < nums[i - 1])
+                {
+                    sorted = false;
+                    break;
+                }
+            }
+
+            if (sorted) break;
+
+            int minSum = INT_MAX;
+            int index = -1;
+
+            for (int i = 0; i < nums.size() - 1; i++)
+            {
+                int sum = nums[i] + nums[i + 1];
+                if (sum < minSum)
+                {
+                    minSum = sum;
+                    index = i;
+                }
+            }
+
+            nums[index] = minSum;
+            nums.erase(nums.begin() + index + 1);
+
+            operations++;
+        }
+
+        return operations;
+    }
+};
