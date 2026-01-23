@@ -1,0 +1,36 @@
+Problem: Search Insert Position
+
+Approach:
+Used a modified binary search on the sorted array.
+
+The idea is to find the position where the target should be inserted if it is not already present.
+I maintained two pointers, `low` and `high`, and repeatedly narrowed the search space.
+If the middle element is smaller than the target, I move `low` to the right.
+Otherwise, I move `high` to the left.
+
+When the loop ends, `low` naturally points to the correct index where the target should be inserted.
+This works because binary search keeps track of the first position where the element could fit.
+
+Time Complexity: O(log n) 
+Space Complexity: O(1) 
+
+```cpp
+
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+
+        int low = 0, high = nums.size() - 1;
+
+        while (low <= high)
+        {
+            int mid = low + (high - low) / 2;
+
+            if (nums[mid] < target) low = mid + 1;
+
+            else high = mid - 1; 
+        }
+
+        return low;
+    }
+};

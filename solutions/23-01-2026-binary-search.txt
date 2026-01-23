@@ -1,0 +1,39 @@
+Problem: Binary Search
+
+Approach:
+Used the classic binary search technique on a sorted array.
+
+I maintained two pointers, `low` and `high`, representing the current search space.
+At each step, I calculated the middle index and compared the value with the target.
+If the middle element matches the target, I return its index.
+If the target is greater, I discard the left half by moving `low` to `mid + 1`.
+If the target is smaller, I discard the right half by moving `high` to `mid - 1`.
+
+This process continues until the target is found or the search space becomes empty.
+
+Time Complexity: O(log n)
+Space Complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+
+        int low = 0, high = nums.size() - 1;
+
+        while (low <= high)
+        {
+            int mid = (low + high) / 2;
+
+            if (nums[mid] == target) return mid;
+
+            else if (nums[mid] < target) low = mid + 1;
+
+            else high = mid - 1; 
+        }
+
+        return -1;
+        
+    }
+};
