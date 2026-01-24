@@ -1,0 +1,35 @@
+Problem: Minimize maximum pair sum in an array
+
+Approach:
+Since we require the minimum maximum pair sum, so its quite clear that we need to make the pairs such that the largest element in the array is paired up with the smallest element.
+
+So, first we sort the array and then use a pointer for the beginning and one for the end of the array. 
+while the first one doesn't cross the second one, we simply keep adding the elements at those positions, while incrementing the first and decrementing the second one and in each iteration we compare the sum with a global "minSum". This way, we have sum of pairs where the pairs are of the smallest and the largest element, then second smallest and second largest and so on. Thus, giving us the minimized maximum pair sum.
+
+Time complexity: O(n)
+Space complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    int minPairSum(vector<int>& nums) {
+
+        int n = nums.size();
+        int i = 0, j = n-1, maxSum = INT_MIN, sum = 0;
+
+        sort(nums.begin(), nums.end());
+
+        while (i < j)
+        {
+            sum = nums[i] + nums[j];
+            maxSum = max(maxSum, sum);
+
+            i++;
+            j--;
+        }
+
+        return maxSum;
+        
+    }
+};
