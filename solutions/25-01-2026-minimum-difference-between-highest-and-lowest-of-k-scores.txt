@@ -1,0 +1,35 @@
+Problem: Minimum difference between highest and lowest of k scores
+
+Approach:
+Used two pointer sliding window approach to solve the problem.
+
+Maintained two pointers 'i' and 'j' to keep track of the beginning and the end of the window.
+Since we must take the difference such that the difference is minimized, it can only be done if the difference of the closest possible numbers present in the array is taken. For that I simply sorted the array and then initialized 'i' to point at the first element of the array, and 'j' at the k'th element with respect to 'i'. This meant that 'i' always pointed at the lowest and 'j' at the largest number in the window of length 'k'.
+
+Then I took the minimum of the difference of the current highest and lowest element of the window in each iteration, while incrementing both 'i' and 'j'.
+
+This gave me the minimum difference of the highest and the lowest scores in the window 'k', meaning 'k' scores.
+
+Time complexity: O(n)
+Space complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    int minimumDifference(vector<int>& nums, int k) {
+
+        sort (nums.begin(), nums.end());
+        int n = nums.size();
+
+        int i = 0, j = i+k-1, diff = INT_MAX;
+
+        while (j < n)
+        {
+            diff = min(diff, nums[j] - nums[i]);
+            i++;
+            j++;
+        }
+        return diff;
+    }
+};
