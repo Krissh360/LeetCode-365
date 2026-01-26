@@ -1,0 +1,42 @@
+Problem: Minimum Absolute Difference
+
+Approach:
+First, I sorted the array so that the closest numbers would be adjacent.
+Then, I traversed the sorted array and calculated the difference between every pair of adjacent elements while keeping a track of the minimum difference found so far.
+
+If a new smaller difference was found, I cleared the result list and stored the new pair.
+If the difference matched the current minimum, I added that pair to the result.
+
+Sorted the array first because the minimum absolute difference between any two numbers in an array will always occur between two neighboring elements in the sorted order.
+
+Time Complexity: O(n log n)
+Space Complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    vector<vector<int>> minimumAbsDifference(vector<int>& arr) {
+
+        vector<vector<int>> res;
+        int n = arr.size(), diff = INT_MAX;
+        sort(arr.begin(), arr.end());
+
+        for (int i = 1; i < n; i++)
+        {
+            if ((arr[i] - arr[i-1]) < diff)
+            {
+                diff = arr[i] - arr[i-1];
+                res.clear();
+                res.push_back({arr[i-1], arr[i]});
+            }
+
+            else if ((arr[i] - arr[i-1]) == diff)
+            {
+                res.push_back({arr[i-1], arr[i]});
+            }
+        }
+        return res;
+        
+    }
+};
