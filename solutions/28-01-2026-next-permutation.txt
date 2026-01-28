@@ -1,0 +1,55 @@
+Problem: Next permutation
+
+Approach:
+
+To find the next lexicographically greater permutation, we need to check for the point or index where the next element is smaller than the current element. This marks as the point at whose right all the elements are sorted in a descending order. So we can iterate the array from the end to find this index and break as soon as we find the index.
+
+Once this index is found, we need to check for the smallest greater element to the right of the array, and we can simply swap it with the element at the index where the lexicographical order needs to be changed. 
+This swap makes the elements of the array to move to the next lexicographical greater order.
+
+This can be done by again iterating from the end. And since we know that the array to the right is in descending order, the first greater element we encounter will be the smallest amongst the elements to the right of our 'idx'.
+
+Now that we have the correct element at the position where the order needed to be changed from, we need the array from that point on to be sorted in ascending order. So we can just use the sort function to sort the array from this point to the end of the array. 
+
+NOTE: One case that needs to be taken care of is where the array is already in the greatest possible lexicographical order. In this case we need to return the smallest lexicographical order. So we will keep and idx = -1 for this in which we will further store the index of the element where the order needs to be changed from. So if this idx doesn't change and remains -1, this means that the array is already in the largest possible lexicographical order and we can reverse the array to obtain the smallest lexicographical order.
+
+
+Time complexity: O(n)
+Space complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+
+        int n = nums.size(), idx = -1;
+        int i = n-1, j = n-2;
+        
+        while (j >= 0)s
+        {
+            if (nums[j] < nums[i])
+            {
+                idx = j;
+                break;
+            }
+        }
+
+        if (idx == -1)
+        {
+            reverse(nums.begin(), nums.end());
+            return;
+        }
+
+        for (int i  = n-1; i > idx; i--)
+        {
+            if (nums[i] > nums[idx])
+            {
+                swap(nums[i], nums[idx]);
+                break;
+            }
+        }
+
+        sort(nums.begin() + idx + 1, nums.end());
+    }
+};
