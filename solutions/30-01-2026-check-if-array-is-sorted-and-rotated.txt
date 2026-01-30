@@ -1,0 +1,35 @@
+Problem: Check if Array is Sorted and Rotated
+
+Approach:
+The idea is to count how many times the order of elements "drops", meaning a number is greater than the next one.
+In a perfectly sorted array, this never happens.
+In a sorted and rotated array, this can happen at most once — at the rotation point.
+
+To handle the circular nature of rotation, I compared each element with the next one using modulo indexing.
+If the number of such drops is more than one, the array is neither sorted nor properly rotated.
+
+Time Complexity: O(n)
+Space Complexity: O(1)
+
+
+```cpp
+
+
+class Solution {
+public:
+    bool check(vector<int>& nums){
+
+        int drops = 0;
+        int n = nums.size();
+
+        for (int i = 0; i < n; i++)
+        {
+            if (nums[i] > nums[(i + 1) % n])
+            {
+                drops++;
+            }
+        }
+
+        return drops <= 1;
+    }
+};
