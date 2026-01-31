@@ -1,0 +1,41 @@
+Problem: Find Smallest Letter Greater Than Target
+
+Approach:
+Used binary search on the sorted character array.
+
+The goal is to find the smallest letter strictly greater than the target.
+If the current middle letter is less than or equal to the target, I move to the right half.
+If it is greater, I store it as a potential answer and continue searching on the left side to find a smaller valid candidate.
+
+If no such letter is found during the search, the answer wraps around to the first letter in the array (because the letters are considered circular).
+
+Time Complexity: O(log n)
+Space Complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    char nextGreatestLetter(vector<char>& letters, char target) {
+
+        int n = letters.size();
+        int low = 0, high = n-1;
+        char ans = '#';
+
+        while (low <= high)
+        {
+            int mid = (low + high) / 2;
+
+            if (letters[mid] <= target) low = mid + 1;
+
+            else
+            {
+                ans = letters[mid];
+                high = mid - 1;
+            }
+        }
+
+        return (ans == '#') ? letters[0] : ans;
+
+    }
+};
