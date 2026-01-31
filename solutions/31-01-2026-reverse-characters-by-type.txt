@@ -1,0 +1,56 @@
+Problem: Reverse Characters by Type
+
+Approach:
+The idea is to reverse letters and special characters separately while keeping their original positions.
+
+I traversed the string once and pushed all lowercase letters into one stack and all special characters into another stack. At the same time, I marked the positions in the string using placeholders.
+
+Then, I traversed the string again. Whenever I encountered a placeholder for a letter, I popped from the letters stack. Whenever I encountered a placeholder for a special character, I popped from the special stack.
+
+Time Complexity: O(n)
+Space Complexity: O(n)
+
+
+```cpp
+
+class Solution {
+public:
+    string reverseByType(string s) {
+
+        int n = s.size();
+        stack <int> letters;
+        stack <int> special;
+
+        for (int i = 0; i < n; i++)
+        {
+            if (s[i] >= 97 && s[i] <= 122)
+            {
+                letters.push(s[i]);
+                s[i] = 0;
+            }
+
+            else
+            {
+                special.push(s[i]);
+                s[i] = 1;
+            }
+        }
+
+        for (int i = 0; i < n; i++)
+        {
+            if (s[i] == 0)
+            {
+                s[i] = letters.top();
+                letters.pop();
+            }
+
+            else if (s[i] == 1)
+            {
+                s[i] = special.top();
+                special.pop();
+            }
+        }
+
+        return s;
+    }
+};
