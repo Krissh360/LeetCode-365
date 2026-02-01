@@ -1,0 +1,40 @@
+Problem: Divide an Array Into Subarrays With Minimum Cost I
+
+Approach:
+The goal is to pick three elements such that the total cost is minimized, with the condition that the first element must always be included.
+
+I started by initializing the sum with the first element of the array.
+Then, I scanned the remaining elements to find the smallest and second smallest values.
+These two values, along with the first element, give the minimum possible total cost.
+
+This works because to minimize the sum of three numbers where one is fixed, we simply need the two smallest numbers from the rest of the array.
+
+Time Complexity: O(n)
+Space Complexity: O(1)
+
+
+```cpp
+class Solution {
+public:
+    int minimumCost(vector<int>& nums) {
+
+        int n = nums.size();
+        int sum = nums[0], mn = INT_MAX, smin = INT_MAX;
+
+        for (int i = 1; i < n; i++)
+        {
+            if (nums[i] < mn)
+            {
+                smin = mn;
+                mn = nums[i];
+            }
+            else if (nums[i] < smin)
+            {
+                smin = nums[i];
+            }
+        }
+
+        sum += mn + smin;
+        return sum;
+    }
+};

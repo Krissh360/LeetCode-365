@@ -1,0 +1,35 @@
+Problem: Count Monobit Numbers
+
+Approach:
+A number is considered a "monobit" if its binary representation consists of continuous 1s from the least significant bit.
+Such numbers follow the pattern: 1, 3, 7, 15, 31, and so on
+
+These numbers have a special property:  
+For a monobit number `i`, the expression `(i & (i + 1)) == 0` holds true.
+
+So, I iterated from 1 to `n` and checked this bitwise condition.
+Every time the condition was satisfied, I increased the count.
+I also handled the case when `n == 0` separately.
+
+Time Complexity: O(n)
+Space Complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    int countMonobit(int n) {
+
+        if (n == 0) return 1;
+
+        int count = 1;
+
+        for (int i = 1; i <= n; i++)
+        {
+            if ((i & (i+1)) == 0) count ++;
+        }
+
+        return count;
+         
+    }
+};

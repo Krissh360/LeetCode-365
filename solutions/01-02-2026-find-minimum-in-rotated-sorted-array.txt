@@ -1,0 +1,43 @@
+Problem: Find Minimum in Rotated Sorted Array
+
+Approach:
+This problem uses a modified binary search to locate the minimum element in a rotated sorted array.
+
+At each step, I checked whether the left half of the current range is sorted.
+If it is sorted, then the smallest element in that half is at `low`, so I updated the minimum and moved to the right half.
+If the left half is not sorted, it means the rotation point lies there, so I updated the minimum using `mid` and searched the left half.
+
+By repeatedly narrowing the search space this way, the minimum element can be found efficiently.
+
+Time Complexity: O(log n)
+Space Complexity: O(1)
+
+
+```cpp
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+
+        int n = nums.size();
+        int low = 0, high = n-1, mn = INT_MAX;
+
+        while (low <= high)
+        {
+            int mid = (low + high) / 2;
+
+            // checking if left half is sorted
+            if (nums[low] <= nums[mid])
+            {
+                mn = min(mn, nums[low]);
+                low = mid + 1;
+            }
+            // if left is unsorted, right is sorted
+            else
+            {
+                mn = min(mn, nums[mid]);
+                high = mid - 1;
+            }
+        }
+        return mn;
+    }
+};
