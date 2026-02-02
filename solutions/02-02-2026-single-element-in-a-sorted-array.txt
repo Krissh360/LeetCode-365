@@ -1,0 +1,38 @@
+Problem: Single Element in a Sorted Array
+
+Approach:
+The array is sorted and every element appears exactly twice except one element.
+This allows the use of binary search with index parity.
+
+I always forced 'mid' to be even so it represents the first index of a pair.
+If 'nums[mid] == nums[mid + 1]', it means this pair is valid and the single element lies on the right side.
+Otherwise, the single element lies on the left side (including mid).
+
+By narrowing the search space this way, the loop eventually points to the index of the single element.
+
+Time Complexity: O(log n)
+Space Complexity: O(1)
+
+```cpp
+class Solution {
+public:
+    int singleNonDuplicate(vector<int>& nums) {
+        
+        int n = nums.size();
+        int l = 0, r = n-1;
+        
+        while (l < r)
+        {
+            int mid = (l + r) / 2;
+
+            if (mid % 2 == 1) mid--;  // making mid even
+
+            if (nums[mid] == nums[mid + 1]) 
+                l = mid + 2;
+            else 
+                r = mid;
+        }
+
+        return nums[l];
+    }
+};

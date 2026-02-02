@@ -1,0 +1,44 @@
+Problem: Frequency of the Most Frequent Element
+
+Approach:
+First, I sorted the array so that I could use a sliding window where the rightmost element is the target value we try to make others equal to.
+
+I maintained a window from index 'i' to 'j' and kept track of the sum of elements inside the window.
+The idea is that to make all elements in the window equal to 'nums[j]', we need
+'(window size * nums[j]) - sum' increments.
+
+If this required number of increments exceeds 'k', I shrink the window from the left.
+Otherwise, I expand the window and update the maximum frequency.
+
+This way, the window always represents the largest group of elements that can be made equal using at most 'k' increments.
+
+Time Complexity: O(n log n)Space Complexity: O(1)
+
+```cpp
+class Solution {
+public:
+    int maxFrequency(vector<int>& nums, int k) {
+
+        sort(nums.begin(), nums.end());
+        int n = nums.size();
+        
+        int i = 0, j = 0, mxfreq = 0;
+        long long sum = 0;
+
+        while (j < n)
+        {
+            sum += nums[j];
+            
+            while ((long long)(j - i + 1) * nums[j] - sum > (long long)k)
+            {
+                sum -= nums[i];
+                i++;
+            }
+
+            mxfreq = max(mxfreq, j - i + 1);
+            j++;
+        }
+
+        return mxfreq;
+    }
+};
