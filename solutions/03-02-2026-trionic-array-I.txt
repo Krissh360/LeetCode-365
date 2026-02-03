@@ -1,0 +1,37 @@
+Problem: Trionic array I
+
+Approach:
+A trionic array has three phases:
+first strictly increasing, then strictly decreasing, and finally strictly increasing again.
+
+I traversed the array in three steps:
+1. Move forward while the elements are increasing.
+2. From that point, move forward while the elements are decreasing.
+3. From there, move forward again while the elements are increasing.
+
+At each transition, ensured that each phase had at least one valid movement.
+If the traversal reaches the end of the array exactly after these three phases, the array is trionic.
+
+Time Complexity: O(n)
+Space Complexity: O(1)
+
+
+```cpp
+class Solution {
+public:
+    bool isTrionic(vector<int>& nums) {
+
+        int n = nums.size(), i = 0;
+        
+        while (i + 1 < n && nums[i] < nums[i + 1]) i++;
+        if (i == 0 || i == n - 1) return false;
+
+        int j = i;
+
+        while (i + 1 < n && nums[i] > nums[i + 1]) i++;
+        if (i == j || i == n - 1) return false;
+
+        while (i + 1 < n && nums[i] < nums[i + 1]) i++;
+        return i == n - 1;
+    }
+};
