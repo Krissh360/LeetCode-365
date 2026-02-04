@@ -1,0 +1,39 @@
+Problem: Majority Element II
+
+Approach:
+The task is to find all elements that appear more than ⌊n/3⌋ times in the array.
+
+I used a hashmap to keep track of the frequency of each element while traversing the array.
+As soon as any element’s frequency exceeded n/3, I added it to the result vector.
+To avoid adding the same element multiple times, I used a set to keep track of elements already included in the answer.
+
+Since an element must cross the frequency threshold only once, this approach ensures correctness while remaining easy to reason about.
+
+Time Complexity: O(n)
+Space Complexity: O(n)
+
+
+```cpp
+class Solution {
+public:
+    vector<int> majorityElement(vector<int>& nums) {
+
+        int n = nums.size();
+        vector<int> ans;
+        unordered_map<int, int> freq;
+        unordered_set<int> added;
+
+        for (int i = 0; i < n; i++)
+        {
+            freq[nums[i]]++;
+
+            if (freq[nums[i]] > floor(n/3) && added.count(nums[i]) == 0)
+            {
+                ans.push_back(nums[i]);
+                added.insert(nums[i]);
+            }
+        }
+
+        return ans;
+    }
+};
