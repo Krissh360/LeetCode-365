@@ -2,7 +2,6 @@ Problem: Minimum removals to balance array
 
 Approach:
 The goal is to remove the minimum number of elements so that the remaining array satisfies the condition:
-
 max_element <= min_element * k
 
 This means that in the final array, the largest number should not exceed k times the smallest number.
