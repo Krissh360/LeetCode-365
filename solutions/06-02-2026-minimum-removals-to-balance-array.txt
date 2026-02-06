@@ -6,7 +6,7 @@ max_element <= min_element * k
 
 This means that in the final array, the largest number should not exceed k times the smallest number.
 
-To make this easier to reason about, the first step is to sort the array. Once sorted, the smallest and largest elements of any valid group will lie at the ends of a subarray.
+The first step is to sort the array. Once sorted, the smallest and largest elements of any valid group will lie at the ends of a subarray.
 
 Now the problem reduces to finding the largest contiguous subarray where:
 nums[j] <= nums[i] * k
