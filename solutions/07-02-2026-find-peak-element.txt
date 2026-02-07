@@ -1,0 +1,56 @@
+Problem: Find peak element
+
+Approach:
+A peak element is one that is strictly greater than its neighbors.
+
+Instead of checking every element linearly, we can use Binary Search because of an important observation:
+
+If we are standing at some index mid:
+- If nums[mid] is smaller than the element on the right, then a peak must exist on the right side.
+- If nums[mid] is smaller than the element on the left, then a peak must exist on the left side.
+
+This works because the array will always "rise" toward a peak.
+
+Before applying binary search, we handle edge cases:
+- If the array has only one element, that element is the peak.
+- If the first element is greater than the second, it's a peak.
+- If the last element is greater than the second last, it's a peak.
+
+Now we perform binary search between index 1 and n-2.
+
+At every step:
+- If nums[mid] is greater than both neighbors, we found a peak.
+- If the left side is increasing, move right.
+- Otherwise, move left.
+
+This reduces the search space by half each time.
+
+Time Complexity: O(log n)
+Space Complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    int findPeakElement(vector<int>& nums) {
+
+        int n = nums.size();
+
+        if (n == 1) return 0;
+        if (nums[0] > nums[1]) return 0;
+        if (nums[n-1] > nums[n-2]) return n-1;
+
+        int low = 1, high = n-2;
+
+        while (low <= high)
+        {
+            int mid = (low + high) / 2;
+
+            if (nums[mid] > nums[mid-1] && nums[mid] > nums[mid+1]) return mid;
+            else if (nums[mid] > nums[mid-1]) low = mid + 1;
+            else high = mid - 1;
+        }
+
+        return -1;
+    }
+};
