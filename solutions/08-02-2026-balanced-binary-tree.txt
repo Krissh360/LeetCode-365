@@ -1,0 +1,55 @@
+Problem: Balanced Binary Tree
+
+Approach:
+A binary tree is said to be height-balanced if, for every node, the difference
+between the heights of its left and right subtrees is not more than 1.
+
+A straightforward approach would be:
+- Compute height of left subtree
+- Compute height of right subtree
+- Check the difference
+But this would recompute heights again and again, leading to O(n^2) time.
+
+To optimize this, we combine the height calculation and balance check in a single recursive function.
+
+The helper function checkHeight() does three things:
+1. Recursively finds the height of the left subtree.
+2. Recursively finds the height of the right subtree.
+3. Checks if the current node is balanced.
+
+If at any point a subtree is found unbalanced, we immediately return -1
+and propagate it upward. This acts as a signal that the tree is not balanced,
+so no further unnecessary calculations are done.
+
+If the subtree is balanced, we return its height.
+
+Finally, in isBalanced(), we simply check whether checkHeight(root)
+returns -1 or a valid height.
+
+This way, every node is visited only once.
+
+Time Complexity: O(n)
+Space Complexity: O(h)
+
+```cpp
+
+class Solution {
+public:
+    int checkHeight(TreeNode* root) {
+        if (!root) return 0;
+
+        int left = checkHeight(root->left);
+        if (left == -1) return -1;
+
+        int right = checkHeight(root->right);
+        if (right == -1) return -1;
+
+        if (abs(left - right) > 1) return -1;
+
+        return 1 + max(left, right);
+    }
+
+    bool isBalanced(TreeNode* root) {
+        return checkHeight(root) != -1;
+    }
+};
