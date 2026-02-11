@@ -1,0 +1,48 @@
+Problem: Subarray Sum Equals K
+
+Approach:
+The task is to count the number of continuous subarrays whose sum equals k.
+We use the concept of Prefix Sum along with a hashmap to do this in linear time.
+As we traverse the array, we keep track of a running prefix sum (preSum).
+If at any index the current prefix sum is preSum,
+we want to know how many previous prefix sums existed such that:
+previous_preSum = preSum - k
+Because if:
+preSum - previous_preSum = k
+then the subarray between those indices has sum k.
+We store the frequency of each prefix sum in a hashmap.
+Important detail:
+We initialize the map with mpp[0] = 1 to handle cases where
+a subarray starting from index 0 itself has sum k.
+
+At every step:
+- Update preSum
+- Check how many times (preSum - k) has occurred before
+- Add that to the count
+- Store/update the current preSum in the map
+
+Time Complexity: O(n)
+Space Complexity: O(n)
+
+```cpp
+
+class Solution {
+public:
+    int subarraySum(vector<int>& nums, int k) {
+
+        unordered_map <int, int> mpp;
+        mpp[0] = 1;
+        int n = nums.size(), count = 0, preSum = 0;
+
+        for(int i = 0; i < n; i++)
+        {
+            preSum += nums[i];
+            int remove = preSum - k;
+            count += mpp[remove];
+            mpp[preSum]++;
+        }
+
+        return count;
+        
+    }
+};
