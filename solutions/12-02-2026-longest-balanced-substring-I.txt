@@ -1,0 +1,68 @@
+Problem: Longest Balanced Substring I
+
+Approach:
+The goal is to find the longest substring where all characters that appear
+have the same frequency.
+
+To solve this, we use a brute-force approach:
+We fix a starting index i, and then expand the substring
+by increasing the ending index j.
+
+For every new substring from i to j:
+- We maintain a frequency array of size 26 (for lowercase letters).
+- Each time we extend j, we update the frequency.
+
+After updating the frequency, we check whether the substring is balanced.
+
+The helper function balanced():
+- Iterates through the frequency array.
+- Ignores characters that do not appear.
+- Stores the first non-zero frequency as a reference.
+- If any other non-zero frequency differs, the substring is not balanced.
+
+If the substring is balanced, we update the maximum length.
+
+Time Complexity: O(n^2)
+Space Complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+
+    bool balanced(vector<int>& freq)
+    {
+        int common = 0;
+
+        for (int i = 0; i < 26; i++)
+        {
+            if (freq[i] == 0) continue;
+
+            if (common == 0) common = freq[i];
+            else if (freq[i] != common) return false;
+        }
+
+        return true;
+    }
+
+    int longestBalanced(string s) {
+
+        int n = s.size();
+        int mxfreq = INT_MIN;
+
+        for (int i = 0; i < n; i++)
+        {
+            vector<int> freq(26);
+
+            for (int j = i; j < n; j++)
+            {
+                freq[s[j] - 'a']++;
+
+                if (balanced(freq))
+                    mxfreq = max(mxfreq, j - i + 1);
+            }
+        }
+
+        return mxfreq;
+    }
+};
