@@ -1,0 +1,123 @@
+Problem: Longest Balanced Substring II
+
+Approach:
+We need the longest substring where all characters present have equal frequency.
+
+Since the string only contains 'a', 'b', and 'c', there are three possible balanced cases:
+
+1) Substring has only one character.
+   Any continuous streak of the same character is balanced. So we first compute the longest streak.
+
+2) Substring has exactly two characters with equal frequency.
+   For any pair (like 'a' and 'b'), we track:
+   diff = count(a) - count(b)
+
+   If the same diff appears at two indices, the substring between them has equal counts.
+   We use a hashmap to store the first occurrence of each diff. If a third character appears, we reset.
+
+   We repeat this for:
+   (a, b), (a, c), and (b, c).
+
+3) Substring has all three characters balanced.
+   For this case:
+   countA == countB == countC
+
+   Instead of checking directly, we track:
+   diffAB = countA - countB
+   diffAC = countA - countC
+
+   If the same pair (diffAB, diffAC) appears again, the substring between those indices is balanced.
+
+Finally, we return the maximum length found across all cases.
+
+Time Complexity: O(n)
+Space Complexity: O(n)
+
+```cpp
+
+class Solution {
+public:
+
+    int helper(string &s, char ch1, char ch2)
+    {
+        int n = s.length();
+        unordered_map <int, int> diffMap;
+        int count1 = 0, count2 = 0, maxL = 0;
+        diffMap[0] = -1;  //handles prefix from index 0
+
+        for (int i = 0; i < n; i++)
+        {
+            if (s[i] != ch1 && s[i] != ch2)  //the streak of the two characters is broken here
+            {
+                diffMap.clear();
+                diffMap[0] = i;
+                count1 = 0;
+                count2 = 0;
+                continue;     //just reset everything
+            }
+
+            if (s[i] == ch1) count1++;
+            if (s[i] == ch2) count2++;
+
+            int diff = count1 - count2;
+            if (diffMap.count(diff))
+            {
+                maxL = max(maxL, i-diffMap[diff]);
+            }
+            else
+            {
+                diffMap[diff] = i;   //storing the first occurence
+            }
+        }
+        return maxL;
+    }
+    int longestBalanced(string s) {
+
+        int n = s.length();
+        int maxL = 0;
+
+        //Case-1: when the longest balanced substrng is formed by just one character
+        int count = 1; //s[0];
+
+        for (int i = 1; i < n; i++)
+        {
+            if (s[i] == s[i-1]) {count++;}
+            else
+            {
+                maxL = max(maxL, count);
+                count = 1;
+            }
+        }
+
+        maxL = max(maxL, count);
+
+        //Case-2: when the longest balanced substring is formed by any two characters (all three cases)
+        maxL = max(maxL, helper(s, 'a', 'b'));
+        maxL = max(maxL, helper(s, 'a', 'c'));
+        maxL = max(maxL, helper(s, 'b', 'c'));
+
+
+        //Case-3: when the longest balanced substring is formed by all the three characters
+        int countA = 0, countB = 0, countC = 0;
+        unordered_map <string, int> diffMap;
+        diffMap["0_0"] = -1;  // prefix base case
+
+        for (int i = 0; i < n; i++)
+        {
+            if (s[i] == 'a') countA++;
+            if (s[i] == 'b') countB++;
+            if (s[i] == 'c') countC++;
+
+            int diffAB = countA - countB;
+            int diffAC = countA - countC;
+
+            string key = to_string(diffAB) + "_" + to_string(diffAC);
+
+            if (diffMap.count(key))
+            {maxL = max(maxL, i-diffMap[key]);}
+            else {diffMap[key] = i;}
+        }
+
+        return maxL;
+    }
+};
