@@ -1,0 +1,47 @@
+Problem: Prefix Connected Words
+
+Approach:
+We are given a list of words and an integer k.
+
+Two words are considered prefix-connected if they share the same first k characters.
+
+To solve this:
+1) Traverse all words.
+2) If a word has length less than k, skip it.
+3) Extract the first k characters using substr(0, k).
+4) Store the prefix in a hashmap and count its frequency.
+
+After processing all words, we iterate over the hashmap.
+
+If any prefix appears more than once, it means multiple words share that prefix. We count such prefixes.
+
+Finally, return the number of prefixes that occur more than once.
+
+Time Complexity: O(n * k)
+Space Complexity: O(n)
+
+```cpp
+
+class Solution {
+public:
+    int prefixConnected(vector<string>& words, int k) {
+
+        int n = words.size(), ans = 0;
+        unordered_map<string, int> occur;
+
+        for (int i = 0; i < n; i++)
+        {
+            if (words[i].size() < k) continue;
+
+            string temp = words[i].substr(0, k);
+            occur[temp]++;
+        }
+
+        for (const auto& pair : occur)
+        {
+            if (pair.second > 1) ans++;
+        }
+
+        return ans;
+    }
+};

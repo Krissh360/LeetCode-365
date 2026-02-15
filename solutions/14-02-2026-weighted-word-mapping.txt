@@ -1,0 +1,50 @@
+Problem: Weighted word mapping
+
+Approach:
+We are given:
+- A list of words
+- A weight array for each lowercase letter (a to z)
+
+For every word, we calculate its total weight by:
+- Iterating through each character
+- Adding the corresponding weight using:
+  weights[word[j] - 'a']
+
+Once we get the total weight of a word, we take sum % 26 to keep it within alphabet range.
+
+Then we map it to a character using: 'z' - remainder
+
+This effectively shifts backward from 'z' based on the remainder value.
+
+We repeat this for all words and append each computed character to the result string.
+
+
+Time Complexity: O(total characters in all words)
+Space Complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    string mapWordWeights(vector<string>& words, vector<int>& weights) {
+
+        int n = words.size();
+        string result = "";
+
+        for (int i = 0; i < n; i++)
+        {
+            int j = 0, sum = 0;
+
+            while (j < words[i].size())
+            {
+                sum += weights[words[i][j] - 'a'];
+                j++;
+            }
+
+            int rem = sum % 26;
+            result += char('z' - rem);
+        }
+
+        return result;
+    }
+};
