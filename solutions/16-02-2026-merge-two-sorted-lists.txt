@@ -1,0 +1,55 @@
+Problem: Merge Two Sorted Lists
+
+Approach:
+We are given two sorted linked lists and need to merge them into one sorted list.
+
+Instead of creating a new list from scratch, we use recursion to directly rearrange pointers.
+
+Base Cases:
+- If list1 is NULL, return list2.
+- If list2 is NULL, return list1.
+
+Recursive Idea: Compare the current values of both lists.
+
+If list1->val is greater than list2->val:
+- list2 should come first.
+- We set list2->next to the result of merging
+  list1 with list2->next.
+- Return list2.
+
+Otherwise:
+- list1 should come first.
+- We set list1->next to the result of merging
+  list1->next with list2.
+- Return list1.
+
+At each step, the smaller node becomes part of the merged list, and recursion handles the rest.
+
+Since each node is visited exactly once, the time complexity is linear.
+
+Time Complexity: O(n + m)
+Space Complexity: O(n + m)
+
+```cpp
+
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+
+        if (!list1) return list2;
+        if (!list2) return list1;
+
+        if (list1 -> val > list2 -> val)
+        {
+            list2 -> next = mergeTwoLists(list1, list2 -> next);
+            return list2;
+        }
+
+        else
+        {
+            list1 -> next = mergeTwoLists(list1 -> next, list2);
+            return list1;
+        }
+        
+    }
+};

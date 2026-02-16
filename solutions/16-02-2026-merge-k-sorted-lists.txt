@@ -1,0 +1,69 @@
+Problem: Merge K Sorted Lists
+
+Approach:
+We are given k sorted linked lists and need to merge them into one sorted list.
+
+Merging them one by one would work, but that would be inefficient.
+
+Instead, we use a Divide and Conquer approach, similar to merge sort.
+
+Step 1: Base Case
+If the list of lists is empty, return NULL.
+
+Step 2: Divide
+We recursively divide the list of linked lists into two halves until only one list remains.
+
+Step 3: Conquer (Merge)
+Once divided, we merge two lists at a time using a helper function merge2Lists().
+
+The merge2Lists() function works recursively:
+- If one list is NULL, return the other.
+- Compare current node values.
+- Attach the smaller node and recursively merge the rest.
+
+By merging in pairs like this, we reduce the number of total merge operations.
+
+This significantly improves efficiency compared to merging one list at a time.
+
+Time Complexity: O(N log k)
+Space Complexity: O(log k)
+
+```cpp
+
+class Solution {
+public:
+
+    ListNode *merge2Lists(ListNode *l1, ListNode *l2)
+    {
+        if (!l1) return l2;
+        if (!l2) return l1;
+
+        if (l1 -> val > l2 -> val)
+        {
+            l2 -> next = merge2Lists(l1, l2 -> next);
+            return l2;
+        }
+
+        else
+        {
+            l1 -> next = merge2Lists(l1 -> next, l2);
+            return l1;
+        }
+    }
+
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+
+        if (lists.empty()) return nullptr;
+        return DivideConqr(lists, 0, lists.size()-1);
+    }
+
+    ListNode *DivideConqr(vector<ListNode*>& lists, int left, int right)
+    {
+        if (left == right) return lists[left];
+
+        int mid = left + (right - left) / 2;
+        ListNode *l1 = DivideConqr(lists, left, mid);
+        ListNode *l2 = DivideConqr(lists, mid+1, right);
+        return merge2Lists(l1, l2);
+    }
+};
