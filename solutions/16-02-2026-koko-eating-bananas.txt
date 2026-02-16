@@ -1,0 +1,82 @@
+Problem: Koko Eating Bananas
+
+Approach:
+We need to find the minimum eating speed (k) such that all banana piles can be finished within h hours.
+
+Observation:
+If Koko eats faster, total hours needed decrease.
+If she eats slower, total hours increase.
+
+This monotonic behavior allows us to use Binary Search on the answer (the eating speed).
+
+Step 1: Define Search Space
+Minimum possible speed = 1
+Maximum possible speed = maximum pile size
+
+Step 2: Check Function For a given speed (mid), we calculate total hours needed:
+
+For each pile:
+hours = ceil(pile / mid)
+
+Instead of using ceil directly, we use: (pile + mid - 1) / mid
+
+We sum up hours for all piles. If total hours <= h, the speed is valid.
+
+Step 3: Binary Search
+- If mid is valid, store it as answer
+  and try smaller speeds (search left).
+- Otherwise, increase speed (search right).
+
+We continue until low > high.
+
+Time Complexity: O(n log maxPile)
+Space Complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+
+    bool check(vector<int> &piles, int mid, int h)
+    {
+        long long sum = 0;
+
+        for (int i = 0; i < piles.size(); i++)
+        {
+            sum += (piles[i] + mid - 1) / mid;
+        }
+
+        return sum <= h;
+    }
+
+    int minEatingSpeed(vector<int>& piles, int h) {
+
+        int n = piles.size();
+        int mx = piles[0];
+
+        for (int i = 1; i < n; i++)
+        {
+            if (piles[i] > mx)  mx = piles[i];
+        }
+
+        int low = 1, high = mx;
+        int ans = mx;
+
+        while (low <= high)
+        {
+            int mid = low + (high - low) / 2;
+
+            if (check(piles, mid, h))
+            {
+                ans = mid;
+                high = mid - 1;
+            }
+            else
+            {
+                low = mid + 1;
+            }
+        }
+
+        return ans;
+    }
+};
