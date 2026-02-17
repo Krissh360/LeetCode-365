@@ -1,0 +1,97 @@
+Problem: Minimum Number of Days to Make m Bouquets
+
+Approach:
+We need to find the minimum number of days required to make m bouquets, where each bouquet needs k adjacent flowers.
+
+First, notice something important:
+If we wait more days, more flowers bloom. So if it’s possible to make the bouquets in X days, it will also be possible in any day greater than X.
+
+That monotonic behavior allows us to use Binary Search on the number of days.
+
+Step 1: Basic Feasibility Check
+
+If m * k > total number of flowers, it’s impossible to make the bouquets. So we return -1 immediately.
+
+Step 2: Search Space
+
+The minimum possible day is the earliest bloom day. The maximum possible day is the latest bloom day.
+
+So we binary search between [minDay, maxDay].
+
+Step 3: Check Function
+
+For a given day (mid), we try to count how many bouquets we can make.
+
+We iterate through bloomDay:
+- If bloomDay[i] <= mid, that flower has bloomed. We increase the current consecutive flower count.
+- Once we collect k consecutive flowers, we form one bouquet and reset the counter.
+- If a flower hasn’t bloomed yet, we reset the consecutive counter to 0.
+
+If total bouquets >= m, then this day is valid.
+
+Step 4: Binary Search Logic
+
+- If mid is valid, store it and try smaller days. Otherwise, try larger days.
+
+Time Complexity: O(n log D)
+Space Complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+
+    bool check(vector<int>& bloomDay, int m, int k, int mid) {
+        int bouquets = 0;
+        int flowers = 0;
+
+        for (int i : bloomDay)
+        {
+            if (i <= mid)   //the flower will bloom within mid days
+            {
+                flowers++;
+                if (flowers == k)     //k folwers will be put into a bouquet
+                {
+                    bouquets++;
+                    flowers = 0;
+                }
+            } 
+            else
+            {
+                flowers = 0; 
+            }
+        }
+
+        return bouquets >= m;
+    }
+
+    int minDays(vector<int>& bloomDay, int m, int k) {
+
+        int n = bloomDay.size();
+        long long prod = 1LL*m*k;   //so that m*k doesn't overflow
+        if (prod > n) return -1;
+        int mx = INT_MIN, mn = INT_MAX, ans = -1;
+
+        for (int i = 0; i < n; i++)
+        {
+            mx = max(bloomDay[i], mx);
+            mn = min(bloomDay[i], mn);
+        }
+        
+        int low = mn, high = mx;
+
+        while (low <= high)
+        {
+            int mid = low + (high - low) / 2;
+
+            if (check(bloomDay, m, k, mid))
+            {
+                ans = mid;
+                high = mid-1;
+            }
+            else low = mid+1;
+        }
+        
+        return ans;
+    }
+};
