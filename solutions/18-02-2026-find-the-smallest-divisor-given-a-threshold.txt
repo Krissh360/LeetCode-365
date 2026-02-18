@@ -1,0 +1,59 @@
+Problem: Find the Smallest Divisor Given a Threshold
+
+Approach:
+We are given an array of numbers and a threshold. We need to find the smallest divisor such that when each number is divided by it (and rounded up), the total sum does not exceed the threshold.
+
+An important observation is that as the divisor increases, the total sum decreases. And as the divisor decreases, the total sum increases. Since this behavior is monotonic, we can apply Binary Search on the divisor.
+
+The minimum possible divisor is 1, and the maximum possible divisor is the largest number in the array. So we search within this range.
+
+For each candidate divisor (mid), we calculate the total sum using the formula (nums[i] + mid - 1) / mid, which effectively performs ceiling division. If the total sum is less than or equal to the threshold, then this divisor works, and we try to find a smaller valid divisor. Otherwise, we increase the divisor.
+
+By continuing this process, we eventually find the smallest divisor that satisfies the condition.
+
+Time Complexity: O(n log m), where 'm' is the max element
+Space Complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+
+    bool check(vector<int>& nums, int mid, int t)
+    {
+        long long sum = 0;
+        for (int i = 0; i < nums.size(); i++)
+        {
+            sum += (nums[i] + mid - 1) / mid;
+        }
+        return sum <= t;
+    }
+
+    int smallestDivisor(vector<int>& nums, int threshold) {
+
+        int n = nums.size();
+        int mx = INT_MIN;
+
+        for (int i = 0; i < n; i++)
+        {
+            mx = max(mx, nums[i]);
+        }
+        
+        int low = 1, high = mx, ans = mx;
+
+        while (low <= high)
+        {
+            int mid = low + (high - low) / 2;
+
+            if (check(nums, mid, threshold))
+            {
+                ans = mid;
+                high = mid - 1;
+            }
+
+            else low = mid + 1;
+        }
+
+        return ans;
+    }
+};
