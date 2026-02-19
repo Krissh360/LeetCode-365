@@ -1,0 +1,66 @@
+Problem: Capacity To Ship Packages Within D Days
+
+Approach:
+We are given a list of package weights and a number of days. The goal is to find the minimum ship capacity required to deliver all packages within the given number of days. The packages must be shipped in order, and we cannot split a package.
+
+An important observation is that if we increase the ship capacity, we can ship packages in fewer days. If we decrease the capacity, it will take more days. Since this behavior is monotonic, we can apply Binary Search on the answer.
+
+The minimum possible capacity must be at least the maximum weight in the array, because the ship must be able to carry the heaviest package. The maximum possible capacity would be the sum of all weights, meaning we ship everything in one day.
+
+For a given capacity (mid), we simulate the shipping process. We keep adding weights to the current load. If adding the next package exceeds the capacity, we increment the day count and reset the load. At the end, if the total days required are less than or equal to the given days, then this capacity works.
+
+Using binary search, if a capacity works, we try to find a smaller valid capacity. Otherwise, we increase the capacity. Eventually, we find the minimum capacity that satisfies the condition.
+
+Time Complexity: O(n log(sum))
+Space Complexity: O(1)
+
+
+```cpp
+
+class Solution {
+public:
+
+    bool capacity(vector<int>& weights, int days, int mid)
+    {
+        int load = 0, d = 1;
+
+        for (int i = 0; i < weights.size(); i++)
+        {
+            if (load + weights[i] > mid)
+            {
+                d++;
+                load = weights[i];
+            }
+            else
+            {
+                load += weights[i];
+            }
+        }
+        return d <= days;
+    }
+
+    int shipWithinDays(vector<int>& weights, int days) {
+
+        int n = weights.size();
+        int low = *max_element(weights.begin(), weights.end());
+        int high = accumulate(weights.begin(), weights.end(), 0); 
+        int ans = high;
+
+        while (low <= high)
+        {
+            int mid = low + (high-low) / 2;
+
+            if (capacity(weights, days, mid))
+            {
+                ans = mid;
+                high = mid-1;
+            }
+            else
+            {
+                low = mid+1;
+            }
+        }
+        
+        return ans;
+    }
+};
