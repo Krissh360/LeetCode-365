@@ -1,0 +1,43 @@
+Problem: Kth Missing Positive Number
+
+Approach:
+We are given a sorted array of positive integers and an integer k. The task is to find the k-th missing positive number that does not appear in the array.
+
+The key idea is to understand how many numbers are missing before any index. For a sorted array, at index i, the number of missing elements before arr[i] can be calculated as:
+
+missing = arr[i] - (i + 1)
+
+This works because if there were no missing numbers, the value at index i should have been i + 1. If it is larger, the difference tells us how many numbers are missing up to that point.
+
+We can use Binary Search to efficiently find where the k-th missing number lies. If the number of missing elements at mid is less than k, it means the k-th missing number lies on the right side. Otherwise, it lies on the left side.
+
+After the binary search ends, the answer can be calculated as: left + k
+
+This works because left represents how many elements from the array are before the position where the k-th missing number should be placed.
+
+If we solve it using a simple linear approach instead, we can iterate through the array and reduce k whenever we find a gap. But the binary search solution is more efficient.
+
+Time Complexity: O(log n)
+Space Complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    int findKthPositive(vector<int>& arr, int k) {
+        int left = 0, right = arr.size() - 1;
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+
+            int missing = arr[mid] - (mid + 1);
+
+            if (missing < k)
+                left = mid + 1;
+            else
+                right = mid - 1;
+        }
+
+        return left + k;
+    }
+};
