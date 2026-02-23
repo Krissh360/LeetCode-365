@@ -1,0 +1,69 @@
+Problem: Split Array Largest Sum
+
+Approach:
+We are given an array and an integer k. The goal is to split the array into exactly k subarrays such that the largest sum among these subarrays is minimized.
+
+An important observation is that if we allow a larger maximum subarray sum, it becomes easier to split the array into k parts. If we restrict the maximum sum too much, we may need more than k subarrays. This monotonic behavior allows us to apply Binary Search on the answer.
+
+The smallest possible value for the answer must be at least the maximum element in the array, because a subarray must contain at least one element. The largest possible value is the sum of all elements, which would mean no splitting at all.
+
+For a given candidate value (mid), we check whether it is possible to split the array into at most k subarrays such that each subarray has sum less than or equal to mid. We iterate through the array while maintaining a running sum. If adding the current element exceeds mid, we start a new subarray and increase the count. If the total number of subarrays needed is less than or equal to k, then this value works.
+
+Using binary search, if mid works, we try to find a smaller possible maximum sum. Otherwise, we increase mid. Eventually, we find the minimum possible largest subarray sum.
+
+Time Complexity: O(n log(sum))
+Space Complexity: O(1)
+
+
+```cpp
+
+class Solution {
+public:
+
+    bool check(vector<int>& nums, int mid, int k)
+    {
+        int t = 1, sum = 0, n = nums.size();
+
+        for (int i = 0; i < n; i++)
+        {
+            if (nums[i] > mid) return false;
+
+            if (sum + nums[i] > mid)
+            {
+                t += 1;
+                sum = nums[i];
+            }
+
+            else
+            {
+                sum += nums[i];
+            }
+        }
+        return t <= k;
+    }
+
+    int splitArray(vector<int>& nums, int k) {
+
+        int n = nums.size();
+        int low = *min_element(nums.begin(), nums.end());
+        int high = accumulate(nums.begin(), nums.end(), 0);
+        int res = -1;
+
+        while (low <= high)
+        {
+            int mid = low + (high - low) / 2;
+
+            if (check(nums, mid, k))
+            {
+                res = mid;
+                high = mid - 1;
+            }
+            else
+            {
+                low = mid + 1;
+            }
+        }
+        
+        return res;
+    }
+};
