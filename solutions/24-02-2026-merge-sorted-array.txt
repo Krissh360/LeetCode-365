@@ -1,0 +1,53 @@
+Problem: Merge Sorted Array
+
+Approach:
+We are given two sorted arrays, where nums1 has enough extra space at the end to hold all elements of nums2. The task is to merge nums2 into nums1 in sorted order, without using extra space.
+
+Instead of merging from the beginning, we start from the end. This is the key idea.
+
+We use three pointers:
+
+i pointing to the last valid element in nums1 (index m-1),
+j pointing to the last element in nums2 (index n-1),
+k pointing to the last position in nums1 (index m+n-1).
+
+At each step, we compare nums1[i] and nums2[j]. The larger element is placed at position k, and we move the corresponding pointer backward. This works because the largest elements should be placed at the end first.
+
+We continue this process until one of the arrays is exhausted. If elements remain in nums2, we copy them into nums1. We do not need to copy remaining elements from nums1 because they are already in the correct position.
+
+Time Complexity: O(m + n)
+Space Complexity: O(1)
+
+
+```cpp
+
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+
+        int i = m-1, j = n-1, k = m+n-1;
+
+        while (i >= 0 && j >= 0)
+        {
+            if (nums1[i] > nums2[j])
+            {
+                nums1[k] = nums1[i];
+                k--;
+                i--;
+            }
+            else
+            {
+                nums1[k] = nums2[j];
+                k--;
+                j--;
+            }
+        }
+
+        while (j >= 0)
+        {
+            nums1[k] = nums2[j];
+            k--;
+            j--;
+        }
+    }
+};
