@@ -1,0 +1,19 @@
+Problem: Merge Intervals
+
+Approach:
+We are given a list of intervals, and the goal is to merge all overlapping intervals.
+
+The first important step is to sort the intervals based on their starting time. Once sorted, any overlapping intervals will appear next to each other. This makes it much easier to process them in one pass.
+
+After sorting, we create a result list and push the first interval into it. Then we iterate through the remaining intervals one by one.
+
+For each interval, we compare it with the last interval added to the result. If the current interval starts before or at the end of the last interval, it means they overlap. In that case, we merge them by updating the ending value of the last interval to the maximum of the two ending values.
+
+If they do not overlap, we simply add the current interval to the result list as a new separate interval.
+
+By the end of the loop, the result list contains all merged intervals.
+
+The key idea is that sorting ensures overlapping intervals are processed together, and maintaining the last merged interval allows us to merge efficiently in a single pass.
+
+Time Complexity: O(n log n)
+Space Complexity: O(n)
