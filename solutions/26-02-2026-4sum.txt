@@ -1,0 +1,67 @@
+Problem: 4Sum
+
+Approach:
+We are given an array of integers and a target value. The goal is to find all unique quadruplets whose sum equals the target.
+
+The first step is to sort the array. Sorting helps in two important ways: it allows us to use the two-pointer technique efficiently, and it makes it easier to avoid duplicate quadruplets.
+
+We use two nested loops to fix the first two numbers. For each pair (nums[i], nums[j]), we reduce the problem to finding two more numbers whose sum equals target - nums[i] - nums[j]. This becomes a classic 2Sum problem, which we solve using two pointers.
+
+We initialize two pointers: l at j + 1 and r at the end of the array. If the sum of nums[l] + nums[r] equals the required value, we store the quadruplet. Then we move both pointers inward and skip duplicate values to ensure uniqueness.
+
+If the sum is smaller than required, we move the left pointer forward. If the sum is larger, we move the right pointer backward.
+
+To prevent duplicate quadruplets, we skip repeated values for i and j, and also skip duplicates while moving l and r.
+
+We also use long long when calculating sums to prevent integer overflow.
+
+Time Complexity: O(n³)
+Space Complexity: O(1)
+
+
+```cpp
+
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+
+        int n = nums.size();
+        vector<vector<int>> ans;
+
+        sort(nums.begin(), nums.end());
+
+        for (int i = 0; i < n-3; i++)
+        {
+
+            if (i > 0 && nums[i] == nums[i-1]) continue;
+
+            for (int j = i+1; j < n-2; j++)
+            {
+                if (j > i+1 && nums[j] == nums[j-1]) continue;
+
+                long long t = (long long)target - nums[i] - nums[j];
+                int l = j+1, r = n-1;
+
+                while (l < r)
+                {
+                    long long sum = (long long)nums[l] + nums[r];
+
+                    if (sum == t)
+                    {
+                        ans.push_back({nums[i], nums[j], nums[l], nums[r]});
+                        l++;
+                        r--;
+
+                        while (l < r && nums[l] == nums[l-1]) l++;
+                        while (l < r && nums[r] == nums[r+1]) r--;
+                    }
+
+                    else if (sum < t) {l++;}
+                    else {r--;}
+                }
+            }
+        }
+
+        return ans;
+    }
+};
