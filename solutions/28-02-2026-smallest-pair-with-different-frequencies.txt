@@ -1,0 +1,55 @@
+Problem: Minimum Distinct Frequency Pair
+
+Approach:
+We are given an array of integers, and we need to find a pair of distinct numbers such that their frequencies in the array are different. If such a pair exists, we return it. Otherwise, we return {-1, -1}.
+
+First, we sort the array. Sorting helps us easily skip duplicate values while iterating and ensures we process distinct numbers cleanly.
+
+Next, we build a frequency map using an unordered_map. This allows us to quickly know how many times each number appears in the array.
+
+After building the frequency map, we use two nested loops to check pairs of distinct numbers. While iterating, we skip duplicate values so that we only consider unique numbers.
+
+For each pair of distinct numbers, we compare their frequencies using the map. If their frequencies are not equal, we immediately return that pair.
+
+If no such pair is found after checking all possible combinations, we return {-1, -1}.
+
+Time Complexity: O(n²)
+Space Complexity: O(n)
+
+
+```cpp
+
+class Solution {
+public:
+    vector<int> minDistinctFreqPair(vector<int>& nums) {
+
+        unordered_map <int, int> mpp;
+        int n = nums.size();
+
+        sort(nums.begin(), nums.end());
+
+        for (int i = 0; i < n; i++)
+            {
+                mpp[nums[i]]++;
+            }
+
+        for (int i = 0; i < n; i++)
+            {
+
+                if (i > 0 && nums[i] == nums[i-1]) continue;
+                
+                for (int j = i+1; j < n; j++)
+                    {
+                        if (j > i+1 && nums[j] == nums[j-1]) continue;
+                        
+                        if (nums[i] != nums[j] && mpp[nums[i]] != mpp[nums[j]])
+                        {
+                           return {nums[i], nums[j]};
+                        }
+                    }
+            }
+
+        return {-1, -1};
+        
+    }
+};
