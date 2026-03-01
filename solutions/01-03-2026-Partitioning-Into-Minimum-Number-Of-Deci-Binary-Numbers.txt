@@ -1,0 +1,32 @@
+Problem: Partitioning Into Minimum Number Of Deci-Binary Numbers
+
+Approach:
+We are given a decimal number as a string, and we need to determine the minimum number of deci-binary numbers required to sum up to it. A deci-binary number contains only digits 0 or 1.
+
+Key observation: Each deci-binary number can contribute at most 1 to any digit position. So if a digit in the number is, for example, 7, then we need at least 7 deci-binary numbers to build that digit.
+
+This means the answer is simply the maximum digit present in the string.
+
+So we iterate through the string, convert each character to its numeric value, and track the maximum digit. That maximum value is the minimum number of deci-binary numbers required.
+
+Time Complexity: O(n)
+Space Complexity: O(1)
+
+
+```cpp
+
+class Solution {
+public:
+    int minPartitions(string n) {
+
+        int s = n.length(), mx = INT_MIN;
+
+        for (int i = 0; i < s; i++)
+        {
+            mx = max(mx, n[i] - '0');
+        }
+
+     return mx;   
+     
+    }
+};
