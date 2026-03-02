@@ -1,0 +1,50 @@
+Problem: Unique Paths
+
+Approach:
+We are given a grid of size m × n. Starting from the top-left corner, we can only move either right or down. The goal is to count the total number of unique paths to reach the bottom-right corner.
+
+At any position (i, j), we have two possible moves: go right to (i, j+1) or go down to (i+1, j). So the total number of paths from (i, j) is simply the sum of paths from these two positions.
+
+We solve this using recursion with memoization (top-down dynamic programming).
+
+If we go out of bounds, we return 0 because that path is invalid.
+If we reach the last row or the last column, there is only one possible way to reach the destination, so we return 1.
+
+To avoid recomputing the same states multiple times, we store results in a 2D dp array. If a value is already computed, we return it directly.
+
+Finally, we start the recursion from position (0, 0).
+
+This ensures each cell is computed only once.
+
+Time Complexity: O(m × n)
+Space Complexity: O(m × n)
+
+
+```cpp
+
+class Solution {
+public:
+
+    int solve(int i, int j, int m, int n, vector<vector<int>> &dp)
+    {
+        // out of bounds
+        if (i >= m || j >= n) return 0;
+
+        // base case
+        if (i == m-1 || j == n-1) return 1;
+
+        if (dp[i][j] != -1) return dp[i][j];
+
+        int right = solve(i, j+1, m, n, dp);
+        int down = solve(i+1, j, m, n, dp);
+
+        return dp[i][j] = right + down;
+    }
+
+    int uniquePaths(int m, int n) {
+
+        vector<vector<int>> dp(m, vector<int>(n, -1));
+        return solve(0, 0, m, n, dp);
+
+    }
+};
