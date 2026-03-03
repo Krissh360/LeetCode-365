@@ -1,0 +1,64 @@
+Problem: Find Kth Bit in Nth Binary String
+
+Approach:
+We are asked to generate a special binary string S(n) defined recursively:
+
+S(0) = "0"
+
+S(n) = S(n-1) + "1" + reverse(invert(S(n-1)))
+
+This means for every level, we take the previous string, append "1" in the middle, and then append the reversed and inverted version of the previous string.
+
+To implement this, we use recursion. The solve(n) function builds the entire string for level n.
+
+If n == 0, we return "0".
+
+Otherwise, Recursively generate S(n-1).
+
+Keep it as the front part.
+
+Create the back part by inverting every bit (0 → 1, 1 → 0) and then reversing it.
+
+Combine everything as: S(n) = front + "1" + back.
+
+After generating the full string, we simply return the (k-1)th character (since indexing is 0-based).
+
+Time Complexity: O(2ⁿ)
+Space Complexity: O(2ⁿ)
+
+
+```cpp
+
+class Solution {
+public:
+
+    string solve(int n)
+    {
+        if (n == 0) return "0";
+
+        string s = solve(n-1);
+        string front = s;
+        string back = find_back(s);
+
+        return front + "1" + back;
+    }
+
+    string find_back(string s)
+    {
+        for (int i = 0; i < s.size(); i++)
+        {
+            if (s[i] == '0') s[i] = '1';
+            else s[i] = '0';
+        }
+
+        reverse(s.begin(), s.end());
+        return s;
+    }
+
+    char findKthBit(int n, int k) {
+
+        string s = solve(n);
+        return s[k-1];
+        
+    }
+};
