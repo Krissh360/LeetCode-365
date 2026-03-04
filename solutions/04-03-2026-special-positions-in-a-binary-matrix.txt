@@ -1,0 +1,59 @@
+Problem: Special Positions in a Binary Matrix
+
+Approach:
+We are given a binary matrix and need to count the number of special positions. A position is considered special if it contains 1, and it is the only 1 in both its row and its column.
+
+To solve this efficiently, we first count how many 1s appear in each row and each column.
+
+We create two arrays:
+rowCount to store the number of 1s in every row.
+colCount to store the number of 1s in every column.
+
+In the first pass through the matrix, we update these counts whenever we encounter a 1.
+
+After computing the counts, we make a second pass through the matrix. For every cell that contains 1, we check whether rowCount[r] == 1 and colCount[c] == 1. If both conditions are true, that position is a special position, and we increase our result counter.
+Finally, we return the total count of such positions.
+
+Time Complexity: O(m × n)
+Space Complexity: O(m + n)
+
+
+```cpp
+
+class Solution {
+public:
+    int numSpecial(vector<vector<int>>& mat) {
+
+        int m = mat.size();
+        int n = mat[0]. size();
+
+        vector<int> rowCount(m, 0);   //no. of 1's in a row
+        vector<int> colCount(n, 0);   //no. of 1's in a col
+
+        for (int r = 0; r < m; r++)
+        {
+            for (int c = 0; c < n; c++)
+            {
+                if (mat[r][c] == 1)
+                {
+                    rowCount[r]++;
+                    colCount[c]++;
+                }
+            }
+        }
+
+        int res = 0;
+
+        for (int r = 0; r < m; r++)
+        {
+            for (int c = 0; c < n; c++)
+            {
+                if (mat[r][c] == 1 && rowCount[r] == 1 && colCount[c] == 1)
+                    res++;
+            }
+        }
+        
+        return res;
+        
+    }
+};
