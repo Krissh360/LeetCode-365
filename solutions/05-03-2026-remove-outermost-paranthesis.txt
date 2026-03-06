@@ -1,0 +1,43 @@
+Problem: Remove Outermost Parentheses
+
+Approach:
+We are given a valid parentheses string that consists of several primitive parentheses groups. The task is to remove the outermost parentheses from every primitive group and return the resulting string.
+
+To solve this, we use a stack to keep track of the current depth of parentheses. As we iterate through the string, we handle opening and closing brackets separately.
+
+When we encounter an opening parenthesis '(', we first check whether the stack is empty. If it is not empty, it means this parenthesis is not the outermost one, so we add it to the result string. Then we push it onto the stack to increase the depth.
+
+When we encounter a closing parenthesis ')', we first pop from the stack because we are moving one level up. After popping, if the stack is still not empty, it means this closing parenthesis is not an outermost one, so we add it to the result.
+
+This way, the first opening and the last closing parenthesis of each primitive group are skipped, while the inner parentheses are preserved.
+
+Time Complexity: O(n)
+Space Complexity: O(n)
+
+```cpp
+
+class Solution {
+public:
+    string removeOuterParentheses(string s) {
+
+        int n = s.length();
+        stack<char> stk;
+        string ans = "";
+
+        for (int i = 0; i < n; i++)
+        {
+            if (s[i] == '(')
+            {
+                if (!stk.empty()) ans += s[i];
+                stk.push(s[i]);
+            }
+            else
+            {
+                stk.pop();
+                if (!stk.empty()) ans += s[i];
+            }
+        }
+        
+        return ans;
+    }
+};

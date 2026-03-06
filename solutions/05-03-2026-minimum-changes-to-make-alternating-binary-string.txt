@@ -1,0 +1,43 @@
+Problem: Minimum Changes to Make Alternating Binary String
+
+Approach:
+We are given a binary string and need to find the minimum number of operations required to make the string alternating. An alternating string means that no two adjacent characters are the same. The string can follow either of these two patterns:
+
+Pattern 1: 010101...
+
+Pattern 2: 101010...
+
+To solve this, we check how many changes are needed to convert the string into each of these patterns.
+
+First, we assume the string starts with '0'. In this case, all even indices should contain '0' and all odd indices should contain '1'. We count how many characters do not match this pattern.
+
+Next, we assume the string starts with '1'. Now, all even indices should contain '1' and all odd indices should contain '0'. Again, we count the number of mismatches.
+
+The minimum of these two counts will be the minimum number of operations required to make the string alternating.
+
+Time Complexity: O(n)
+Space Complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    int minOperations(string s) {
+
+        int res = 0, curr1 = 0, curr2 = 0;
+
+        for(int i = 0; i < s.size(); i++)
+        {
+            if (i%2 == 0 && s[i] != '0') curr1++;
+            if (i%2 != 0 && s[i] != '1') curr1++;
+        }
+
+        for(int i = 0; i < s.size(); i++)
+        {
+            if (i%2 == 0 && s[i] != '1') curr2++;
+            if (i%2 != 0 && s[i] != '0') curr2++;
+        }
+
+        return min(curr1, curr2);
+    }
+};
