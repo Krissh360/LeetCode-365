@@ -1,0 +1,28 @@
+Problem: Check If Binary String Has At Most One Segment of Ones
+
+Approach:
+We are given a binary string and need to check whether it contains at most one continuous segment of '1'.
+
+A valid string should look like this pattern: some '1's followed by '0's. Once a '0' appears, there should never be another '1' afterward. If we ever see the pattern "01" followed later by "10" again (meaning a '1' appears after a '0'), then the string has more than one segment of '1'.
+
+To check this, we iterate through the string and look for the pattern "01" followed by "10" in reverse form. In practice, we simply check whether a '0' is immediately followed by a '1'. If this happens, it means a new segment of '1' has started after zeros, which is not allowed.
+
+If we finish scanning the string without finding "01" transitions that break the rule, the string contains at most one segment of '1'.
+
+Time Complexity: O(n)
+Space Complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    bool checkOnesSegment(string s) {
+
+        for (int i = 0; i < s.size() - 1; i++)
+        {
+            if (s[i] == '0' && s[i + 1] == '1') return false;
+        }
+
+        return true;
+    }
+};
