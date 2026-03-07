@@ -1,0 +1,65 @@
+Problem: Minimum Number of Flips to Make the Binary String Alternating
+
+Approach:
+We are given a binary string, and we can perform two operations: rotate the string (move the first character to the end) and flip characters. The goal is to find the minimum number of flips required to make the string alternating.
+
+A key observation is that an alternating string can only follow two patterns: 010101... or 101010.... Since rotations are allowed, we must consider every possible rotation of the original string.
+
+To handle all rotations efficiently, we concatenate the string with itself. This creates a new string where every possible rotation of the original string appears as a substring of length n.
+
+Next, we generate two target strings of length 2n:
+s1 representing the pattern 101010...
+s2 representing the pattern 010101...
+
+We then use a sliding window of size n across the doubled string. While expanding the window, we count how many characters differ from each target pattern. These counts represent the number of flips required.
+
+If the window grows larger than n, we shrink it from the left and update the mismatch counts accordingly. Whenever the window size becomes exactly n, we update the result with the minimum flips needed for either pattern.
+
+Time Complexity: O(n)
+Space Complexity: O(n)
+
+
+```cpp
+
+class Solution {
+public:
+    int minFlips(string s) {
+
+        int n = s.length();
+
+        // for getting all the possible op1 strings in a single string
+        s = s + s;
+        string s1, s2;
+
+        // target strings - s1: 010101..., s2: 101010...
+        for (int i = 0; i < 2*n; i++)
+        {
+            s1 += (i%2 ? '0' : '1');
+            s2 += (i%2 ? '1' : '0');
+        }
+
+        int f1 = 0, f2 = 0;
+        int i = 0, j = 0;
+        int res = INT_MAX;
+
+        while (j < 2*n)
+        {
+            if (s[j] != s1[j]) f1++;
+            if (s[j] != s2[j]) f2++;
+
+            if (j-i+1 > n)
+            {
+                if (s[i] != s1[i]) f1--;
+                if (s[i] != s2[i]) f2--;
+                i++;
+            }
+
+            if (j-i+1 == n) res = min({res, f1, f2});
+
+            j++;
+        }
+
+        return res;
+
+    }
+};
