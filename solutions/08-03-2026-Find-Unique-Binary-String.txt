@@ -1,0 +1,35 @@
+Problem: Find Unique Binary String
+
+Approach:
+We are given a list of n binary strings, each of length n. The goal is to return a binary string of length n that does not appear in the list.
+
+A clever way to solve this is by using a technique similar to Cantor’s diagonal argument. The idea is to construct a new string that differs from every string in the list at least at one position.
+
+We build the result string character by character. For each index i, we look at the ith character of the ith string. If that character is '0', we place '1' in our result string; otherwise, we place '0'.
+
+By flipping the diagonal character for each position, we guarantee that the constructed string differs from the ith string at index i. Since it differs from every string in the list at least in one position, it cannot be equal to any of them.
+
+Therefore, the generated string is guaranteed to be unique.
+
+Time Complexity: O(n)
+Space Complexity: O(n)
+
+
+```cpp
+
+class Solution {
+public:
+    string findDifferentBinaryString(vector<string>& nums) {
+
+        int n = nums.size();
+        string result = "";
+
+        for (int i = 0; i < n; i++)
+        {
+            if (nums[i][i] == '0') result += '1';
+            else result += '0';
+        }
+
+        return result;
+    }
+};
