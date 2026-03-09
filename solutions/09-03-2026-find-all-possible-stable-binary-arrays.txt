@@ -1,0 +1,76 @@
+Problem: Find all Possible Stable Binary Arrays I
+
+Approach:
+We are given the number of zeros and ones, along with a limit that restricts how many identical elements can appear consecutively. The goal is to count the number of binary arrays that can be formed using all the given zeros and ones while ensuring that no more than limit identical elements appear in a row.
+
+To solve this, we use recursion with memoization (dynamic programming).
+
+At any point, we track three things:
+
+How many ones are left to place.
+
+How many zeros are left to place.
+
+Whether the last placed element was a 1 or a 0.
+
+If both zeros and ones are exhausted, it means we have successfully formed a valid array, so we return 1.
+
+If the last element placed was 1, the next elements must be 0. We can place between 1 and limit zeros, as long as we still have enough zeros left. For each possible length, we recursively compute the number of valid arrays.
+
+Similarly, if the last element placed was 0, we place between 1 and limit ones and recursively continue building the array.
+
+To avoid recomputing the same states repeatedly, we store results in a 3D memoization table t[onesLeft][zerosLeft][lastWasOne].
+
+Finally, we consider both possibilities for the starting element: starting with a 1 or starting with a 0. The total number of valid arrays is the sum of these two results, taken modulo 
+1e9+7
+
+Time Complexity: O(zero × one × limit)
+Space Complexity: O(zero × one)
+
+
+```cpp
+
+class Solution {
+public:
+
+    int m = 1e9+7;
+    int t[201][201][2] ;      // memoization [ones][zeros][bool]
+
+    int solve(int onesLeft, int zerosLeft, bool lastWasOne, int limit)
+    {
+        if (onesLeft == 0 && zerosLeft == 0) return 1;
+
+        if (t[onesLeft][zerosLeft][lastWasOne] != -1)     //already solved state
+            return t[onesLeft][zerosLeft][lastWasOne];
+
+        int res = 0;
+
+        if (lastWasOne == true)      //explore zeros
+        {
+            for (int len = 1; len <= min(zerosLeft, limit); len++)
+            {
+                res = (res + solve(onesLeft, zerosLeft-len, false, limit)) % m;
+            }
+        }
+
+        else                    // explore ones
+        {
+            for (int len = 1; len <= min(onesLeft, limit); len++)
+            {
+                res = (res + solve(onesLeft-len, zerosLeft, true, limit)) % m;
+            }
+        }
+
+        return t[onesLeft][zerosLeft][lastWasOne] = res;
+
+    }
+
+    int numberOfStableArrays(int zero, int one, int limit) {
+
+        memset(t, -1, sizeof(t));
+        int startWithOne = solve(one, zero, false, limit);
+        int startWithZero = solve(one, zero, true, limit);
+        
+        return (startWithOne + startWithZero) % m;
+    }
+};

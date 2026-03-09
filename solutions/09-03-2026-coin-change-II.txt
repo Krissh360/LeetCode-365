@@ -1,0 +1,43 @@
+Problem: Coin Change II
+
+Approach:
+We are given a set of coin denominations and a target amount. The goal is to find the total number of combinations that can make up that amount. Each coin can be used unlimited times, and the order of coins does not matter.
+
+We solve this using Dynamic Programming.
+
+We create a dp array where dp[i] represents the number of ways to make amount i. Initially, dp[0] = 1 because there is exactly one way to form amount 0 — by choosing no coins.
+
+Next, we iterate through each coin. For a coin c, we update all amounts from c to the target amount. If we already know how many ways we can make amount (i - c), then we can form amount i by adding coin c to those combinations.
+
+So we update:
+dp[i] += dp[i - c]
+
+By looping through coins first, we ensure that combinations are counted correctly and different orders of the same coins are not treated as separate solutions.
+
+At the end, dp[amount] contains the total number of combinations that can form the target amount.
+
+Time Complexity: O(n × amount)
+Space Complexity: O(amount)
+
+
+```cpp
+
+
+class Solution {
+public:
+    int change(int amount, vector<int>& coins) {
+
+        vector<unsigned long long> dp(amount+1, 0);
+        dp[0] = 1;
+
+        for (int c : coins)
+        {
+            for (int i = c; i <= amount; i++)
+            {
+                dp[i] += dp[i-c];
+            }
+        }
+        
+        return (int)dp[amount];
+    }
+};

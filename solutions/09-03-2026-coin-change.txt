@@ -1,0 +1,41 @@
+Problem: Coin Change
+
+Approach:
+We are given a list of coin denominations and a target amount. The goal is to determine the minimum number of coins required to make that amount. If it is not possible to form the amount, we return -1.
+
+To solve this problem, we use dynamic programming.
+
+We create a dp array where dp[i] represents the minimum number of coins needed to form the amount i. Initially, we set all values to a very large number (INT_MAX) to represent that those amounts have not yet been reached. The base case is dp[0] = 0 because zero coins are needed to make amount 0.
+
+Next, we iterate through each coin denomination. For every coin c, we update all amounts from c to the target amount. If we can reach i - c, then we can form i by adding one more coin c. Therefore, we update:
+
+dp[i] = min(dp[i], dp[i - c] + 1)
+
+We also check that dp[i - c] is not INT_MAX to ensure that the previous amount was actually reachable.
+
+After filling the table, if dp[amount] is still INT_MAX, it means the amount cannot be formed with the given coins, so we return -1. Otherwise, we return dp[amount].
+
+Time Complexity: O(n × amount) where n is the number of coin types
+Space Complexity: O(amount)
+
+```cpp
+
+class Solution {
+public:
+    int coinChange(vector<int>& coins, int amount) {
+
+        vector<int> dp(amount + 1, INT_MAX);
+        dp[0] = 0;
+
+        for (int c : coins)
+        {
+            for (int i = c; i <= amount; i++)
+            {
+                if (dp[i - c] == INT_MAX) continue;
+                dp[i] = min(dp[i], dp[i - c] + 1);
+            }
+        }
+
+        return dp[amount] == INT_MAX ? -1 : dp[amount];
+    }
+};
