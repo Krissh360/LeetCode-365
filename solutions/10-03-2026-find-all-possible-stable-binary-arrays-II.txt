@@ -1,0 +1,70 @@
+Problem: Find all Possible Stable Binary Arrays
+
+Approach:
+We are given the number of zeros and ones and a limit that restricts how many identical elements can appear consecutively. The goal is to count how many binary arrays can be formed using all zeros and ones such that no more than "limit" identical numbers appear in a row.
+
+To solve this, we use Dynamic Programming.
+
+We define a 3D DP table:
+t[i][j][k]
+
+where:
+i = number of zeros used
+j = number of ones used
+k = last element placed (0 for zero, 1 for one)
+
+t[i][j][0] represents the number of valid arrays with i zeros and j ones ending with 0.
+t[i][j][1] represents the number of valid arrays with i zeros and j ones ending with 1.
+
+First, we initialize base cases:
+- If we only place zeros (up to the limit), there is exactly one valid array.
+- Similarly, if we only place ones (up to the limit), there is exactly one valid array.
+
+Then we fill the DP table.  
+To end with a '1', the previous element must be either '0' or '1', so we add both possibilities from state (i, j-1). However, if placing another '1' would create a block longer than the allowed limit, we subtract the invalid configurations.
+
+Similarly, to end with a '0', we consider states from (i-1, j). If adding another zero would exceed the allowed limit, we subtract those invalid cases.
+This subtraction step ensures we never count arrays where consecutive identical numbers exceed the limit.
+
+Time Complexity: O(zero × one)
+Space Complexity: O(zero × one)
+
+
+```cpp
+
+class Solution {
+public:
+    int m = 1e9+7;
+
+    int numberOfStableArrays(int zero, int one, int limit) {
+
+        vector<vector<vector<int>>> t(zero+1, vector<vector<int>>(one+1, vector<int>(2,0)));
+
+        for(int i=0;i<=min(zero,limit);i++)
+            t[i][0][0] = 1;
+
+        for(int j=0;j<=min(one,limit);j++)
+            t[0][j][1] = 1;
+
+        for(int i=0;i<=zero;i++)
+        {
+            for(int j=0;j<=one;j++)
+            {
+
+                if(i==0 || j==0) continue;
+
+                t[i][j][1] = (t[i][j-1][0] + t[i][j-1][1]) % m;
+
+                if(j-1 >= limit)
+                    t[i][j][1] = (t[i][j][1] - t[i][j-1-limit][0] + m) % m;
+
+                t[i][j][0] = (t[i-1][j][0] + t[i-1][j][1]) % m;
+
+                if(i-1 >= limit)
+                    t[i][j][0] = (t[i][j][0] - t[i-1-limit][j][1] + m) % m;
+            }
+        }
+
+        return (t[zero][one][0] + t[zero][one][1]) % m;
+    }
+};
