@@ -1,0 +1,54 @@
+Problem: Minimum Operations to Reduce X to Zero
+
+Approach:
+We are given an array and a value x. In one operation, we can remove an element either from the beginning or from the end of the array. The goal is to find the minimum number of operations required so that the sum of removed elements equals x.
+
+Instead of thinking directly about removing elements from both ends, we can reframe the problem. If the total sum of the array is sum, and we remove elements whose sum is x, then the remaining elements must have a sum of sum - x.
+
+So the problem becomes: find the longest subarray whose sum equals sum - x. If we keep the longest such subarray, the remaining elements outside that subarray are exactly the ones we remove.
+
+To find this subarray efficiently, we use the sliding window technique. We expand the window by moving the right pointer and add elements to the current sum. If the sum becomes larger than the target (sum - x), we shrink the window from the left until the sum becomes valid again.
+
+Whenever the current sum equals the target, we update the maximum length of the valid subarray.
+
+At the end, if we never find such a subarray, the answer is -1. Otherwise, the minimum number of operations is the total array length minus the length of the longest valid subarray.
+
+Time Complexity: O(n)
+Space Complexity: O(1)
+
+
+```cpp
+
+class Solution {
+public:
+    int minOperations(vector<int>& nums, int x) {
+
+        int n = nums.size();
+        int sum = 0;
+
+        for (int num : nums) sum += num;
+
+        if (sum == x) return n;
+
+        int target = sum - x;
+
+        int i = 0, currSum = 0, ans = -1;
+
+        for (int j = 0; j < n; j++)
+        {
+            currSum += nums[j];
+
+            while (i <= j && currSum > target)
+            {
+                currSum -= nums[i];
+                i++;
+            }
+
+            if (currSum == target)
+                ans = max(ans, j - i + 1);
+        }
+
+        if (ans == -1) return -1;
+        return n - ans;
+    }
+};
