@@ -1,0 +1,80 @@
+Problem: Minimum Number of Seconds to Make Mountain height Zero
+
+Approach:
+We are given several workers, each with a time factor t. If a worker performs k units of work, the time required follows the pattern:
+
+t × (1 + 2 + 3 + ... + k)
+This is an arithmetic series, so the total time becomes:
+t × k(k + 1) / 2
+
+Our goal is to find the minimum time required so that all workers together complete at least mH units of work. To solve this efficiently, we use Binary Search on time.
+
+First, we define a search range for the time:
+The minimum possible time is 1.
+
+The maximum possible time occurs when the slowest worker performs all mH units alone, which is maxTime × mH(mH+1)/2.
+
+For a candidate time mid, we check how many units of work each worker can complete within that time.
+From the formula:
+
+t × k(k+1)/2 ≤ mid
+
+we solve for k using the quadratic equation. This gives the number of units a worker can finish within mid seconds:
+
+k = floor( sqrt(2 × mid / t + 0.25) - 0.5 )
+
+We compute this value for every worker and sum the total work they can do. If the total work is at least mH, the time mid is sufficient.
+
+Using binary search, if mid works, we try a smaller time; otherwise, we increase the time. Eventually, we find the smallest valid time.
+
+Time Complexity: O(n log T)
+Space Complexity: O(1)
+
+
+```cpp
+
+class Solution {
+public:
+
+    typedef long long ll;  // no need to take ll again n again
+
+    bool check (ll mid, vector<int>& nums, int mH)
+    {
+        ll h = 0;
+        
+        for (int &t : nums)
+        {
+            h += (ll)(sqrt(2.0 * mid / t + 0.25) - 0.5);
+            if (h >= mH) return true;
+        }
+
+        return h >= mH;
+    }
+
+    long long minNumberOfSeconds(int mH, vector<int>& nums) {
+
+        int maxTime = *max_element(nums.begin(), nums.end());
+
+        // we want to find the min time so we will BS on time
+        ll l = 1, r = (ll)maxTime * mH * (mH+1) / 2;
+        ll res = 0;
+
+        while (l <= r)
+        {
+            ll mid = l + (r-l) / 2;
+
+            if (check(mid, nums, mH))
+            {
+                res = mid;
+                r = mid - 1;
+            }
+
+            else
+            {
+                l = mid + 1;
+            }
+        }
+
+        return res;
+    }
+};
