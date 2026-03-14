@@ -1,0 +1,65 @@
+Problem: The K-th Lexicographical Happy String of Length n
+
+Approach:
+A happy string is a string made only of 'a', 'b', and 'c' such that no two adjacent characters are the same. We need to find the k-th happy string of length n in lexicographical order.
+
+To solve this, we use backtracking. We build the string one character at a time and try all possible choices from 'a' to 'c'.
+
+At each step, before adding a character, we check whether it is the same as the last character already present in the current string. If it is, we skip it, because that would violate the happy string condition.
+
+Whenever the current string reaches length n, we have found one valid happy string. We increase a counter to keep track of how many happy strings have been generated so far. If the counter becomes equal to k, we store that string as the answer.
+
+Because the characters are tried in the order 'a', 'b', 'c', the strings are generated automatically in lexicographical order.
+
+At the end, if the k-th happy string exists, it is returned. Otherwise, the result remains an empty string.
+
+Time Complexity: O(3 × 2ⁿ)
+Space Complexity: O(n)
+
+
+```cpp
+
+class Solution {
+public:
+
+    void BackTrack(int n, string &curr, string &res, int &k, int &count)
+    {
+        if (curr.length() == n)     // base condition
+        {
+            count++;   // found a happy string
+
+            if (count == k)    // found the K'th happy string
+                res = curr;
+
+            return;
+        }
+
+        // generating all the happy strings
+        for (char ch = 'a'; ch <= 'c'; ch++)
+        {
+            if (!curr.empty() && curr.back() == ch)
+                continue;
+
+            // DO
+            curr.push_back(ch);
+
+            // EXPLORE
+            BackTrack(n, curr, res, k, count);
+
+            // UNDO
+            curr.pop_back();
+        }
+    }
+
+    string getHappyString(int n, int k) {
+
+        string curr = "";
+        string res = "";
+        int count = 0;
+
+        BackTrack(n, curr, res, k, count);
+
+        return res;
+
+    }
+};
