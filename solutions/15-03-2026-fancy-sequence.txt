@@ -1,0 +1,83 @@
+Problem: Fancy Sequence
+
+Approach:
+Instead of updating every element again and again, we keep track of the overall effect of operations using two variables:
+
+add → total value added to all elements
+mult → total value multiplied to all elements
+
+So the actual value of any stored element is: stored_value × mult + add
+
+For append(val), we cannot store val directly because some operations may already be affecting the whole sequence. So we store a modified value such that after applying the current mult and add, it becomes val.
+
+To do that, we reverse the current transformation: x = (val - add) / mult
+
+Since division under modulo is not normal division, we use the modular inverse of mult.
+For addAll(inc), we just increase add.
+For multAll(m), we multiply both mult and add by m, because multiplication affects the whole sequence.
+For getIndex(idx), we return: seq[idx] × mult + add
+
+If the index is out of range, we return -1.
+
+This makes the operations fast because we avoid updating the full sequence every time.
+
+Time Complexity: O(n)
+Space Complexity: O(n)
+
+```cpp
+
+class Fancy {
+public:
+    typedef long long ll;
+
+    ll M = 1e9+7;
+
+    vector<ll> seq;
+    ll add = 0;
+    ll mult = 1;
+
+    //Binary Exponentiation for Fermat's Little Theorem -> power(mult, M-2);
+    long long power(long long a, long long b)
+    {
+        if(b == 0)
+            return 1;
+
+        long long half   = power(a, b/2);
+        long long result = (half * half) % M;
+
+        if(b%2 == 1)
+            result = (result * a) % M;
+
+        return result;
+    }
+
+    Fancy()
+    {
+        
+    }
+    
+    void append(int val)
+    {
+        long long x = ((val - add) % M + M) * power(mult, M-2)%M;
+        seq.push_back(x);
+    }
+    
+    void addAll(int inc)
+    {
+        add = (add + inc) % M;
+    }
+    
+    void multAll(int m)
+    {
+        mult = (mult * m) % M;
+        add  = (add * m) % M;
+    }
+    
+    int getIndex(int idx)
+    {
+        if(idx >= seq.size())
+            return -1;
+
+        return (seq[idx]*mult + add) % M;
+    }
+};
