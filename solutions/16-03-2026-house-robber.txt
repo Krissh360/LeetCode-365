@@ -1,0 +1,53 @@
+Problem: House Robber
+
+Approach:
+At each house, we have two choices: either rob it or skip it.
+
+If we rob the current house, we cannot rob the previous one, so we add its money to dp[i-2].
+
+If we skip it, we simply take the best answer till the previous house, which is dp[i-1].
+
+So for every house:
+dp[i] = max(nums[i] + dp[i-2], dp[i-1])
+
+We first handle small cases:
+If there are no houses, answer is 0
+
+If there is only one house, answer is that house’s money
+
+Then we build the DP array:
+dp[0] = money from the first house
+dp[1] = maximum of first two houses
+
+After that, we fill the array and return the last value, which stores the maximum money we can rob.
+
+Time Complexity: O(n)
+Space Complexity: O(n)
+
+
+```cpp
+
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+
+        int n = nums.size();
+
+        if (n == 0) return 0;
+        if (n == 1) return nums[0];
+
+        vector<int> dp(n);
+        dp[0] = nums[0];
+        dp[1] = max(nums[0], nums[1]);
+
+        for (int i = 2; i < n; i++)
+        {
+            int take = nums[i] + dp[i-2];
+            int drop = dp[i-1];
+            dp[i] = max(take, drop);
+        }
+
+        return dp[n-1];
+        
+    }
+};

@@ -1,0 +1,105 @@
+Problem: Get Biggest Three Rhombus Sums in a Grid
+
+Approach:
+We need to find the three largest distinct rhombus border sums in the grid.
+
+For every cell, we treat it as the top point of a rhombus.
+
+First, we always include the rhombus of size 0, which is just the cell itself.
+
+Then we try to build bigger rhombuses with size k = 1, 2, 3....
+
+For each size, we calculate the 4 corners:
+top = (r, c)
+right = (r + k, c + k)
+bottom = (r + 2k, c)
+left = (r + k, c - k)
+
+If any corner goes outside the grid, we stop increasing the size.
+
+Otherwise, we walk along the 4 edges of the rhombus and add all border values to get the sum.
+Each valid rhombus sum is inserted into a set, so only distinct sums are stored and they stay sorted automatically.
+At the end, we take the largest three values from the set and return them.
+
+Time Complexity: O(m × n × min(m, n)²)
+Space Complexity: O(k)
+
+
+```cpp
+
+class Solution {
+public:
+    vector<int> getBiggestThree(vector<vector<int>>& grid) {
+
+        int m = grid.size();
+        int n = grid[0].size();
+        
+        set<int> sums;  // stores distinct sums in sorted order
+        
+        for (int r = 0; r < m; r++)
+        {
+            for (int c = 0; c < n; c++)
+            {
+                // size 0 rhombus (single cell)
+                sums.insert(grid[r][c]);
+                
+                // try larger rhombuses
+                for (int k = 1; ; k++)
+                {
+                    int top_r = r, top_c = c;
+                    int right_r = r + k, right_c = c + k;
+                    int bottom_r = r + 2 * k, bottom_c = c;
+                    int left_r = r + k, left_c = c - k;
+                    
+                    // check boundaries
+                    if (bottom_r >= m || left_c < 0 || right_c >= n)
+                        break;
+                    
+                    int sum = 0;
+                    
+                    // edge 1: top -> right
+                    int x = top_r, y = top_c;
+                    for (int i = 0; i < k; i++)
+                    {
+                        sum += grid[x][y];
+                        x++;
+                        y++;
+                    }
+                    
+                    // edge 2: right -> bottom
+                    for (int i = 0; i < k; i++)
+                    {
+                        sum += grid[x][y];
+                        x++;
+                        y--;
+                    }
+                    
+                    // edge 3: bottom -> left
+                    for (int i = 0; i < k; i++)
+                    {
+                        sum += grid[x][y];
+                        x--;
+                        y--;
+                    }
+                    
+                    // edge 4: left -> top
+                    for (int i = 0; i < k; i++)
+                    {
+                        sum += grid[x][y];
+                        x--;
+                        y++;
+                    }
+                    
+                    sums.insert(sum);
+                }
+            }
+        }
+        
+        vector<int> ans;
+        for (auto it = sums.rbegin(); it != sums.rend() && ans.size() < 3; ++it) {
+            ans.push_back(*it);
+        }
+        
+        return ans;
+    }
+};
