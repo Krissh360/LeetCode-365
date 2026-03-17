@@ -1,0 +1,66 @@
+Problem: Largest Submatrix With Rearrangements
+
+Approach:
+We are given a binary matrix, and we can rearrange columns in each row. The goal is to find the largest possible submatrix consisting only of 1s.
+
+First, we convert the matrix into a height matrix. For each cell, we count how many consecutive 1s are stacked vertically above it (including itself). This is done by adding the value from the previous row if the current cell is 1.
+
+Now each row represents heights of histograms.
+
+For every row:
+We copy the row and sort it in descending order.
+After sorting, we assume we can rearrange columns freely.
+
+For each position j, we take:
+height = row[j]
+width = j + 1
+area = height × width
+
+We keep track of the maximum area across all rows.
+
+The key idea is that sorting lets us group taller columns together to form larger rectangles.
+
+Time Complexity: O(n × m log m)
+Space Complexity: O(m)
+
+
+```cpp
+
+class Solution {
+public:
+    int largestSubmatrix(vector<vector<int>>& matrix) {
+
+    int n = matrix.size();
+    int m = matrix[0].size();
+
+    for (int i = 1; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            if (matrix[i][j] == 1)
+                matrix[i][j] += matrix[i - 1][j];
+        }
+    }
+
+    int maxArea = 0;
+
+    for (int i = 0; i < n; i++)
+    {
+        vector<int> row = matrix[i];
+
+        sort(row.begin(), row.end(), greater<int>());
+
+        for (int j = 0; j < m; j++)
+        {
+            int height = row[j];
+            int width = j + 1;
+            int area = height * width;
+
+            maxArea = max(maxArea, area);
+        }
+    }
+
+    return maxArea;
+    
+    }
+};
