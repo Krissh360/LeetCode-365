@@ -1,0 +1,71 @@
+Problem: Count Submatrices with Top-Left Element and Sum Less Than k
+
+Approach:
+We are given a grid and need to count how many submatrices (starting from (0,0)) have sum ≤ k.
+
+The key idea is to use a 2D prefix sum.
+
+First, we build a prefix matrix where:
+prefix[i][j] = sum of all elements from (0,0) to (i,j)
+
+So each cell directly gives the sum of the submatrix ending at (i,j) and starting from (0,0).
+
+We compute it using:
+prefix[i][j] = grid[i][j]
+             + prefix[i-1][j]
+             + prefix[i][j-1]
+             - prefix[i-1][j-1]
+
+Once we have this, every (i, j) represents one submatrix (from (0,0) to (i,j)).
+
+So we just iterate through all cells and count how many prefix[i][j] ≤ k
+
+Time Complexity: O(m × n)
+Space Complexity: O(m × n)
+
+
+```cpp
+
+class Solution {
+public:
+    int countSubmatrices(vector<vector<int>>& grid, int k) {
+
+        int m = grid.size();
+        int n = grid[0].size();
+        
+        // Step 1: Prefix sum matrix
+        vector<vector<int>> prefix(m, vector<int>(n, 0));
+        
+        for (int i = 0; i < m; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                prefix[i][j] = grid[i][j];
+                
+                if (i > 0)
+                    prefix[i][j] += prefix[i - 1][j];
+                
+                if (j > 0)
+                    prefix[i][j] += prefix[i][j - 1];
+                
+                if (i > 0 && j > 0)
+                    prefix[i][j] -= prefix[i - 1][j - 1];
+            }
+        }
+        
+        // Step 2: Counting valid submatrices
+        int count = 0;
+        
+        for (int i = 0; i < m; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                if (prefix[i][j] <= k)
+                    count++;
+            }
+        }
+        
+        return count;
+        
+    }
+};
