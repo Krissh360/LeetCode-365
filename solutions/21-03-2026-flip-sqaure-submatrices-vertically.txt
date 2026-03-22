@@ -1,0 +1,48 @@
+Problem: Flip square submatrix vertically
+
+Approach:
+We are given a grid and a starting point (x, y) with size k. The task is to reverse the selected k × k submatrix vertically (i.e., flip rows inside that square).
+
+We define the boundaries:
+Rows → from x to x + k - 1
+Columns → from y to y + k - 1
+
+Then we use a two-pointer idea on rows:
+One pointer starts at the top (startR)
+One pointer starts at the bottom (endR)
+
+For each pair of rows, we swap all elements column-wise within the submatrix.
+
+After each swap:
+move the top pointer down
+move the bottom pointer up
+
+This continues until both pointers meet. Finally, we return the modified grid.
+
+Time Complexity: O(k²)
+Space Complexity: O(1)
+
+
+```cpp
+
+class Solution {
+public:
+    vector<vector<int>> reverseSubmatrix(vector<vector<int>>& grid, int x, int y, int k) {
+
+        int startR = x, endR = x+k-1;
+        int startC = y, endC = y+k-1;
+
+        for (int i = startR; i <= endR; i++)
+        {
+            for (int j = startC; j <= endC; j++)
+            {
+                swap(grid[i][j], grid[endR][j]);
+            }
+
+            endR--;
+        }
+
+        return grid;
+        
+    }
+};
