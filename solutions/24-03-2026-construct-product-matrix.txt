@@ -1,0 +1,76 @@
+Problem: Construct Product Matrix
+
+Approach:
+We are given a grid where we can only move right or down, and we need to find the maximum product from (0,0) to (m-1,n-1).
+
+The tricky part is that the grid can contain negative numbers. A negative value can turn a small product into a large one (if multiplied again), so we must track both:
+maximum product so far and minimum product so far
+
+For each cell (i, j), we store:
+{maxProduct, minProduct} from that cell to the end.
+
+We use recursion + memoization (DP):
+From (i, j), we try moving down and right
+For each direction, we get both max and min values
+
+We multiply the current cell value with both and update:
+new max = max of all possibilities
+new min = min of all possibilities
+
+We store results in a DP table so we don’t recompute the same cell again.
+
+At the end:
+If the maximum product is negative, return -1
+Otherwise, return it modulo 
+12345
+
+Time Complexity: O(m × n)
+Space Complexity: O(m × n)
+
+
+```cpp
+
+class Solution {
+public:
+    int M = 12345;
+
+    vector<vector<int>> constructProductMatrix(vector<vector<int>>& grid) {
+
+        int n = grid.size();
+        int m = grid[0].size();
+        int size = n*m;
+
+        vector<long long> prefix(size, 1), suffix(size, 1);
+        vector<int> flat;
+
+        // turning into a 1D array for using prefix and suffix product algo
+        for (auto &row : grid)
+        {
+            for (auto &val : row)
+            {
+                flat.push_back(val % M);
+            }
+        }
+
+        for (int i = 1; i < size; i++)
+        {
+            prefix[i] = (prefix[i-1] * flat[i-1]) % M;
+        }
+
+        for (int i = size-2; i >= 0; i--)
+        {
+            suffix[i] = (suffix[i+1] * flat[i+1]) % M;
+        }
+
+        vector<vector<int>> Product(n, vector<int>(m));
+
+        for (int i = 0; i < size; i++)
+        {
+            int val = (prefix[i] * suffix[i]) % M;
+            Product[i/m][i%m] = val;
+        }
+
+        return Product;
+        
+    }
+};
