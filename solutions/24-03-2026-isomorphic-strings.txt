@@ -1,0 +1,52 @@
+Problem: Isomorphic Strings
+
+Approach:
+We need to check if two strings can be mapped to each other such that:
+each character in s maps to one character in t
+no two different characters map to the same character
+
+To ensure this, we use two hash maps:
+s_to_t → maps characters from s to t
+t_to_s → maps characters from t to s
+
+While iterating through both strings:
+If a mapping already exists, we check if it is consistent
+If not, we create a new mapping in both directions
+
+If at any point the mapping conflicts, we return false
+
+If we finish without conflicts, the strings are isomorphic
+
+Time Complexity: O(n)
+Space Complexity: O(1)
+
+
+```cpp
+
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) {
+
+        unordered_map<char, char> s_to_t;
+        unordered_map<char, char> t_to_s;
+
+        for (int i = 0; i < s.size(); i++)
+        {
+            if (s_to_t.count(s[i]))
+            {
+                if (s_to_t[s[i]] != t[i]) return false;
+            }
+
+            if (t_to_s.count(t[i]))
+            {
+                if (t_to_s[t[i]] != s[i]) return false;
+            }
+
+            s_to_t[s[i]] = t[i];
+            t_to_s[t[i]] = s[i];
+        }
+        
+        return true;
+
+    }
+};
