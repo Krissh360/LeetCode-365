@@ -1,0 +1,49 @@
+Problem: Maximum Nesting Depth of Parentheses
+
+Approach:
+We need to find the maximum number of nested parentheses in the string.
+
+We use a simple counter:
+
+nest → current depth
+maxNest → maximum depth seen so far
+
+We traverse the string:
+
+When we see '(', we increase nest and update maxNest
+When we see ')', we decrease nest
+
+At the end, maxNest will store the deepest level of nesting.
+
+Time Complexity: O(n)
+Space Complexity: O(1)
+
+
+```cpp
+
+class Solution {
+public:
+    int maxDepth(string s) {
+
+        int n = s.length();
+        int maxNest = 0, nest = 0;
+
+        for (int i = 0; i < n; i++)
+        {
+            if (s[i] == '(')
+            {
+                nest++;
+                maxNest = max(maxNest, nest);
+            }
+
+            else if (s[i] == ')')
+            {
+                nest--;
+            }
+
+        }
+        
+        return maxNest;
+
+    }
+};

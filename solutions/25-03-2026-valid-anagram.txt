@@ -1,0 +1,50 @@
+Problem: Valid Anagram
+
+Approach:
+We need to check whether two strings are anagrams, meaning they contain the same characters with the same frequencies.
+
+First, if the lengths are different, they can’t be anagrams, so we return false.
+
+Then we use a frequency map:
+
+For each character in s, we increase its count
+For each character in t, we decrease its count
+
+If both strings are anagrams, all counts should cancel out and become 0.
+
+Finally, we check the map:
+
+If any value is not 0, the strings are not anagrams
+Otherwise, they are anagrams
+
+Time Complexity: O(n)
+Space Complexity: O(1)
+
+
+```cpp
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+
+    if (t.length() != s.length()) return false;
+
+    int n = s.length();
+    unordered_map <char, int> freq;
+
+    for (int i = 0; i < n; i++)
+    {
+        freq[s[i]]++;
+        freq[t[i]]--;
+    }
+
+    for (const auto &pair : freq)
+    {
+        if (pair.second != 0) return false;
+    }
+
+    return true;
+
+    }
+};
+
+
