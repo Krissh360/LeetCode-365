@@ -1,0 +1,84 @@
+Problem: Equal Sum Grid Partition
+
+Approach:
+We need to check if we can split the grid into two parts (using one straight horizontal or vertical cut) such that both parts have equal sum.
+
+First, we compute the total sum of all elements.
+If the total sum is odd, it’s impossible to split it into two equal parts, so we return false.
+
+Then we try two types of cuts:
+
+1) Horizontal cut:
+We go row by row and keep adding row sums.
+After each row, we check if the accumulated sum equals totalSum / 2.
+If yes, we found a valid horizontal split.
+
+2) Vertical cut:
+Similarly, we go column by column, accumulate column sums, and check if it equals totalSum / 2.
+
+We stop before the last row/column to make sure both parts are non-empty.
+
+If any cut works, we return true, otherwise false.
+
+Time Complexity: O(n × m)
+Space Complexity: O(1)
+
+
+```cpp
+
+class Solution {
+public:
+
+    typedef long long ll;
+    bool canPartitionGrid(vector<vector<int>>& grid) {
+
+        int n = grid.size();
+        int m = grid[0].size();
+        ll totalSum = 0;
+
+        // calculating the total sum of the grid's elements
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < m; j++)
+            {
+                totalSum += grid[i][j];
+            }
+        }
+
+        if (totalSum % 2 != 0) return false;
+
+        ll tempHorSum = 0, horSum = 0;
+        
+        // for horizontal cut
+        for (int i = 0; i < n-1; i++) // n-1 ensures both parts are non empty
+        {
+            tempHorSum = 0;
+            for (int j = 0; j < m; j++)
+            {
+                tempHorSum += grid[i][j];
+            }
+
+            horSum += tempHorSum;
+            if (horSum == totalSum/2)
+                return true;
+        }
+
+        ll verSum = 0, tempVerSum = 0;
+
+        // for vertical cut;
+        for (int i = 0; i < m-1; i++)
+        {
+            tempVerSum = 0;
+            for (int j = 0; j < n; j++)
+            {
+                tempVerSum += grid[j][i];
+            }
+
+            verSum += tempVerSum;
+            if (verSum == totalSum/2)
+                return true;
+        }
+
+        return false;
+    }
+};
