@@ -1,0 +1,37 @@
+Problem: Delete Node in a Linked List
+
+Approach:
+We are given a node that needs to be deleted, but we don’t have access to the head of the linked list.
+
+So instead of deleting the node directly, we copy the value of the next node into the current node. Then we move forward and keep doing this until we reach the last node.
+
+At the end, we delete the last node and update the previous node’s next pointer to NULL.
+
+This way, the given node is effectively removed from the list.
+
+Time Complexity: O(n)
+Space Complexity: O(1)
+
+
+```cpp
+
+
+class Solution {
+public:
+    void deleteNode(ListNode* node) {
+
+        ListNode *prev = NULL;
+
+        while (node != NULL && node -> next != NULL)
+        {
+            node -> val = node -> next -> val;
+            
+            prev = node;
+            node = node -> next;
+        }
+
+        prev -> next = NULL;
+        delete(node);
+        
+    }
+};
