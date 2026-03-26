@@ -1,0 +1,122 @@
+Problem: Equal Sum Grid Partition
+
+Approach:
+We need to check if the grid can be split into two parts (horizontal or vertical) such that:
+either both parts have equal sum
+or the difference can be fixed by removing one element
+
+First, we compute the total sum of the grid.
+
+Horizontal Cut
+We try cutting the grid row by row.
+
+Keep adding elements to topSum
+Compute bottomSum = totalSum - topSum
+Let diff = topSum - bottomSum
+
+Now check:
+If diff == 0 → perfect split → return true
+Otherwise, check if removing one element can fix it:
+If diff equals any element in the top part → valid
+We track elements using a set for quick lookup
+
+We also try the same logic after reversing the grid, so we cover both directions (top-heavy and bottom-heavy cases).
+
+Vertical Cut
+Instead of writing new logic, we transpose the grid and reuse the same horizontal function.
+
+Transpose → columns become rows
+Apply the same process
+Also check after reversing
+Final Result
+
+If any of the checks succeed, return true. Otherwise, return false.
+
+Time Complexity: O(m × n)
+Space Complexity: O(m × n)
+
+
+```cpp
+
+class Solution {
+public:
+
+    typedef long long ll;
+    ll totalSum = 0;
+
+    bool checkHorCut(vector<vector<int>>& grid)
+    {
+        int m = grid.size();
+        int n = grid[0].size();
+        unordered_set<ll> st;
+        ll topSum = 0;
+
+        for (int i = 0; i < m-1; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                st.insert(grid[i][j]);
+                topSum += grid[i][j];
+            }
+
+            ll bottomSum = totalSum - topSum;
+            ll diff = topSum - bottomSum;
+
+            if (diff == 0) return true;
+
+            if (diff == (ll)grid[0][0]) return true;
+            if (diff == (ll)grid[0][n-1]) return true;
+            if (diff == (ll)grid[i][0]) return true;
+            
+            if (i > 0 && n > 1 && st.count(diff)) return true; 
+        }
+
+        return false;
+    }
+
+    bool canPartitionGrid(vector<vector<int>>& grid) {
+
+        int m = grid.size();
+        int n = grid[0].size();
+
+        for (int i = 0; i < m; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                totalSum += grid[i][j];
+            }
+        }
+
+        // checking for horizontal cuts
+        if (checkHorCut(grid))
+            return true;
+        // reverse the grid so that we can easily check for top - bottom everytime
+        reverse(begin(grid), end(grid));
+
+        if (checkHorCut(grid))
+            return true;
+
+        // checking for vertical cuts
+        // transpose of grid and call HorCut function
+        
+        reverse(begin(grid), end(grid)); // original grid
+        vector<vector<int>> transposeGrid(n, vector<int>(m));
+
+        for (int i = 0; i < m; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                transposeGrid[j][i] = grid[i][j];
+            }
+        }
+
+        if (checkHorCut(transposeGrid))
+            return true;
+        reverse(begin(transposeGrid), end(transposeGrid));
+        if (checkHorCut(transposeGrid))
+            return true;
+
+        return false;
+
+    }
+};
