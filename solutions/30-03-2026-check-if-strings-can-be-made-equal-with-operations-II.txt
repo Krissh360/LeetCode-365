@@ -1,0 +1,50 @@
+Problem: Check if Two Strings Can Be Made Equal With Operations II
+
+Approach:
+We are given two strings of length 4. We can swap characters at indices with the same parity (even with even, odd with odd).
+
+So instead of simulating swaps, we:
+- Separate characters at even indices and odd indices for both strings
+- Sort the even parts and compare them
+- Sort the odd parts and compare them
+
+If both even and odd parts match after sorting, the strings can be made equal.
+
+Time Complexity: O(1)
+Space Complexity: O(1)
+
+```cpp
+
+class Solution {
+public:
+    bool canBeEqual(string s1, string s2) {
+
+        string even1 = "";
+        string even2 = "";
+        
+        string odd1 = "";
+        string odd2 = "";
+        
+        for (int i = 0; i < 4; i++)
+        {
+            if (i % 2 == 0)
+            {
+                even1 += s1[i];
+                even2 += s2[i];
+            }
+            else
+            {
+                odd1 += s1[i];
+                odd2 += s2[i];
+            }
+        }
+        
+        sort(even1.begin(), even1.end());
+        sort(even2.begin(), even2.end());
+        
+        sort(odd1.begin(), odd1.end());
+        sort(odd2.begin(), odd2.end());
+        
+        return even1 == even2 && odd1 == odd2;
+    }
+};
