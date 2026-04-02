@@ -1,0 +1,78 @@
+Problem: Maximum Amount of money Robot Can Earn
+
+Approach:
+We are given a grid of coins where we can move only right or down. Some cells may have negative values, and we are allowed to neutralize (skip) up to 2 negative cells.
+
+We use recursion with memoization (3D DP):
+dp[i][j][neut] represents the maximum amount we can collect starting from cell (i, j) with `neut` neutralizations left.
+
+At each cell, we have two choices:
+1. Take the value → add current cell value and move right or down
+2. Skip the value (only if it is negative and we have neutralizations left)
+
+We compute both options and take the maximum.
+
+For the last cell:
+- If it is negative and we can neutralize, we take 0
+- Otherwise, we must take its value
+
+We store results in DP to avoid recomputation.
+
+Time Complexity: O(m × n × 3)
+Space Complexity: O(m × n × 3)
+
+
+class Solution {
+public:
+
+    int m, n;
+    vector<vector<vector<int>>> dp;
+
+    int solve(vector<vector<int>>& coins, int i, int j, int neut)
+    {
+        if (i >= m || j >= n)
+            return INT_MIN;
+
+        if (dp[i][j][neut] != INT_MIN)
+            return dp[i][j][neut];
+
+        if (i == m-1 && j == n-1)
+        {   
+            if (coins[i][j] < 0 && neut > 0)
+                return dp[i][j][neut] = 0;
+
+            return dp[i][j][neut] = coins[i][j];
+        }
+
+        int right = solve(coins, i, j+1, neut);
+        int down  = solve(coins, i+1, j, neut);
+
+        int take = INT_MIN;
+        int bestNext = max(right, down);
+
+        if (bestNext != INT_MIN)
+            take = coins[i][j] + bestNext;
+
+        int skip = INT_MIN;
+        if (coins[i][j] < 0 && neut > 0)
+        {
+            int skipDown = solve(coins, i+1, j , neut-1);
+            int skipRight = solve(coins, i, j+1, neut-1);
+
+            skip = max(skipDown, skipRight);
+        }
+
+        return dp[i][j][neut] = max(take, skip);
+    }
+
+    int maximumAmount(vector<vector<int>>& coins) {
+
+        m = coins.size();
+        n = coins[0].size();
+
+        dp.assign(m, vector<vector<int>>(n, vector<int>(3, INT_MIN)));
+
+        return solve(coins, 0, 0, 2);
+        
+    }
+};

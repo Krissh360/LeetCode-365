@@ -1,0 +1,99 @@
+Problem: Robot Collisions
+
+Approach:
+We are given robots with positions, healths, and directions. Robots move and collide if one is moving right and another is moving left.
+
+First, we sort the robots based on their positions so we can process them in order.
+
+We use a stack to keep track of robots moving to the right.
+
+For each robot:
+- If it is moving right, we push it onto the stack
+- If it is moving left, it may collide with robots in the stack
+
+While there is a collision:
+- Compare healths of the current robot and the top robot in the stack
+- The robot with smaller health dies
+- The one with larger health loses 1 health and continues
+- If both have equal health, both die
+
+After processing all robots, we collect the healths of robots that are still alive.
+
+Time Complexity: O(n log n)
+Space Complexity: O(n)
+
+
+```cpp
+
+
+class Solution {
+public:
+    vector<int> survivedRobotsHealths(vector<int>& positions, vector<int>& healths, string directions) {
+
+        int n = positions.size();
+        vector<int> actual_idx(n);
+
+        iota(begin(actual_idx), end(actual_idx), 0);
+
+        auto lambda = [&](int &i, int &j)
+        {
+            if (positions[i] < positions[j])
+                return true;
+
+            return false;
+        };
+
+        sort(begin(actual_idx), end(actual_idx), lambda);
+
+        vector<int> res;
+        stack<int> stk;
+
+        for (int &currIdx : actual_idx)
+        {
+            if (directions[currIdx] == 'R')
+            {
+                stk.push(currIdx);
+            }
+
+            else
+            {
+                while(!stk.empty() && healths[currIdx] > 0)
+                {
+                    int top_idx = stk.top();
+                    stk.pop();
+
+                    if (healths[top_idx] > healths[currIdx])
+                    {
+                        healths[top_idx]--;
+                        healths[currIdx] = 0;
+                        stk.push(top_idx);
+                    }
+
+                    else if (healths[top_idx] < healths[currIdx])
+                    {
+                        healths[currIdx]--;
+                        healths[top_idx] = 0;
+                    }
+
+                    else
+                    {
+                        healths[top_idx] = 0;
+                        healths[currIdx] = 0;
+                    }
+
+                }
+            }
+        }
+
+        for (int i = 0; i < n; i++)
+        {
+            if (healths[i] > 0)
+            {
+                res.push_back(healths[i]);
+            }
+        }
+
+        return res;
+        
+    }
+};
